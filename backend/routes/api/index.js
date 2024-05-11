@@ -1,8 +1,11 @@
 const router = require('express').Router();
+const { restoreUser } = require('../../utils/auth.js');
+const { setTokenCookie } = require('../../utils/auth.js');
+const { User } = require('../../db/models');
+const { requireAuth } = require('../../utils/auth.js');
 
-router.post('/test', function(req, res) {
-    res.json({ requestBody: req.body });
-});
-  
+
+router.use(restoreUser);
+
 
 module.exports = router;
