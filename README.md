@@ -4,7 +4,7 @@
 
 ![db-schema]
 
-[db-schema]: ./images/TamrielRetreats.png
+[db-schema]: ./images/TamrielRetreates.png
 
 
 ## API Documentation
