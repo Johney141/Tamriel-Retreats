@@ -2,7 +2,9 @@
 
 ## Database Schema Design
 
-![Tamriel Retreates](./images/Tamriel%20Retreats.png)
+![db-schema]
+
+[db-schema]: ./images/TamrielRetreats.png
 
 
 ## API Documentation
