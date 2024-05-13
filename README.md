@@ -395,7 +395,7 @@ Creates and returns a new spot.
 * Require Authentication: true
 * Request
   * Method: POST
-  * URL: /users/current/spots
+  * URL: /spots
   * Headers:
     * Content-Type: application/json
   * Body:
