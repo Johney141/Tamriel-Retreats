@@ -44,6 +44,14 @@ app.use(
 
 app.use(routes);
 
+
+app.get('/', (req, res) => {
+  res.json({
+    Status: 'Running',
+    Message: 'Server is online'
+  })
+})
+
 // Catch unhandled requests and forward to error handler.
 app.use((_req, _res, next) => {
     const err = new Error("The requested resource couldn't be found.");
