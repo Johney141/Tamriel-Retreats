@@ -53,7 +53,7 @@ Returns the information about the current user that is logged in.
 * Require Authentication: true
 * Request
   * Method: GET
-  * URL: /users/current
+  * URL: /api/session
   * Body: none
 
 * Successful Response when there is a logged in user
@@ -94,7 +94,7 @@ information.
 * Require Authentication: false
 * Request
   * Method: POST
-  * URL: /login
+  * URL: /api/session
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -160,7 +160,7 @@ user's information.
 * Require Authentication: false
 * Request
   * Method: POST
-  * URL: /signup
+  * URL: /api/users
   * Headers:
     * Content-Type: application/json
   * Body:
