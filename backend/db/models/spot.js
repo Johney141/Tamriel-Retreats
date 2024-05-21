@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     lng:{
-      type: DataTypes.DECIMA,
+      type: DataTypes.DECIMAL,
       allowNull: false
     },
     name: {
