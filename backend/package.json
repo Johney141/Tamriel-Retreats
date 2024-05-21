@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "migrate":"npx dotenv sequelize db:migrate",
+    "seed":"npx dotenv sequelize db:seed:all",
+    "seed-undo": "npx dotenv sequelize db:seed:undo:all",
     "sequelize": "sequelize",
     "sequelize-cli": "sequelize-cli",
     "start": "per-env",
