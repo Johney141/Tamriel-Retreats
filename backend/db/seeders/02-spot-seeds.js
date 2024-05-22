@@ -18,6 +18,7 @@ module.exports = {
       address: 'Plains District',
       city: 'Whiterun',
       country: 'Skyrim',
+      state: 'Imperial',
       lat: 15.0000001,
       lng: 70.0000002,
       name: 'Bannered Mare',
@@ -29,6 +30,7 @@ module.exports = {
     {
       address: 'City Center',
       city: 'Rifton',
+      state: 'Stormcloak',
       country: 'Skyrim',
       lat: -40.0000001,
       lng: 120.0000002,
@@ -41,6 +43,7 @@ module.exports = {
     {
       address: 'Thieves Guild',
       city: 'Rifton',
+      state: 'Stormcloak',
       country: 'Skyrim',
       lat: -40.0202111,
       lng: 120.1200002,
