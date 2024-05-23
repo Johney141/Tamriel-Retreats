@@ -5,7 +5,7 @@ const { Review } = require('../models');
 const bcrypt = require("bcryptjs");
 
 let options = {};
-options.tableName = "SpotImages";
+options.tableName = "Reviews";
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
