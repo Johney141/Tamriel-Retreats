@@ -23,7 +23,7 @@ module.exports = {
         url: 'https://tamriel-retreats.onrender.com/images/The_Bee_and_Barb_preview.jpg',
         spotId: '2',
         isPreview: true
-      },
+      },q
       {
         url: 'https://tamriel-retreats.onrender.com/images/The_Ragged_Flagon_preview.jpg',
         spotId: '3',
