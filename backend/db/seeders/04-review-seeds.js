@@ -33,7 +33,7 @@ module.exports = {
         review: 'Spot is infested with skeevers, and when I woke up someone had stolen all of my gold',
         stars: 1
       }
-    ])
+    ], {validate: true})
   },
 
   async down (queryInterface, Sequelize) {
