@@ -20,7 +20,7 @@ router.get('/', async (req, res, next) => {
         if(!spots){
             next(new Error('No spots currently exist'))
         }
-        let avgRatings = []
+        let updatedSpots = []
         for(let spot of spots){
             const spotId = spot.id;
             const reviews = await Review.findAll({
@@ -28,8 +28,11 @@ router.get('/', async (req, res, next) => {
             });
             let reviewCount = reviews.length;
             let starSum = reviews.reduce((sum, review) => sum + review.stars, 0);
-            avgRatings.push(starSum / reviewCount)
-            // spot.avgRating = starSum / reviewCount;
+
+            let updatedSpot = spot.toJSON();
+
+            updatedSpot.avgRating = starSum / reviewCount;
+            
 
 
             const previewImage = await SpotImage.findOne({
@@ -38,13 +41,12 @@ router.get('/', async (req, res, next) => {
                     isPreview: true
                 }
             })
-            console.log(spot)
-            spot.previewImage = previewImage.url;
+            
+            updatedSpot.previewImage = previewImage.url;
+            updatedSpots.push(updatedSpot)
         }
-        for(let spot of spots) {
-            // spot.avgRating = 
-        }
-        res.json(spots)
+       
+        res.json(updatedSpots)
 
     } catch (error) {
         next(error)
