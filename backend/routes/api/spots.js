@@ -103,7 +103,9 @@ router.get('/:spotId', async (req, res, next) => {
         })
 
         if(!spot) {
-            next(new Error("Spot couldn't be found"))
+            const noSpot = new Error("Spot couldn't be found");
+            noSpot.status = 404
+            next(noSpot)
         }
 
         const updatedSpot = fullSpot(spot);
@@ -146,15 +148,18 @@ router.put('/:spotId', requireAuth, async (req, res, next) => {
         const userId = req.user.id;
         const { address, city, state, country, lat, lng, name, description, price } = req.body;
         const spot = await Spot.findByPk(spotId);
-        console.log(userId)
-        console.log(spot.ownerId)
+
 
         if(!spot) {
-            next(new Error("Spot couldn't be found"))
+            const noSpot = new Error("Spot couldn't be found");
+            noSpot.status = 404
+            next(noSpot)
         }
 
         if(spot.ownerId !== userId) {
-            next(new Error("Forbidden"))
+            const notAuth = new Error("Forbidden")
+            notAuth.status = 403
+            next(notAuth)
         }
         
 
@@ -186,11 +191,15 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
         const spot = await Spot.findByPk(spotId)
 
         if(!spot) {
-            next(new Error("Spot couldn't be found"))
+            const noSpot = new Error("Spot couldn't be found");
+            noSpot.status = 404
+            next(noSpot)
         }
 
         if(spot.ownerId !== userId) {
-            next(new Error("Forbidden"))
+            const notAuth = new Error("Forbidden")
+            notAuth.status = 403
+            next(notAuth)
         }
         
         await spot.destroy();
