@@ -84,6 +84,51 @@ router.get('/:spotId', async (req, res, next) => {
     }
 });
 
+router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const reviewId = parseInt(req.params.reviewId);
+        const review = await Review.findByPk(reviewId, {
+            include: [
+                {
+                    model: ReviewImage,
+                }
+            ]
+        })
+        if(!review) {
+            const noReview = new Error("Review couldn't be found");
+            noReview.status = 404;
+            return next(noReview);
+        }
+        if(review.ReviewImages.length > 10 ){
+            const resourceLimit = new Error('Maximum number of images for this resource was reached')
+            resourceLimit.status = 403;
+            return next(resourceLimit);
+        }
+
+        if(review.userId !== userId){
+            const notAuth = new Error("Forbidden");
+            notAuth.status = 403;
+            return next(notAuth);
+        }
+        const { url } = req.body
+        const newReviewImage = await ReviewImage.create({
+            url,
+            reviewId
+        });
+
+        res.json({
+            id: newReviewImage.id,
+            url: newReviewImage.url
+        })
+
+    } catch (error) {
+        next(error);
+    }
+})
+
+
+
 const validateReview = [
     check('review')
         .exists({checkFalsy: true})
@@ -167,6 +212,7 @@ router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => 
 
 router.delete('/:reviewId', requireAuth, async (req, res, next) => {
     try {
+        const userId = req.user.id;
         const reviewId = parseInt(req.params.reviewId);
         const review = await Review.findByPk(reviewId);
 
@@ -175,6 +221,12 @@ router.delete('/:reviewId', requireAuth, async (req, res, next) => {
             noReview.status = 404;
             return next(noReview);
         }
+        
+        if(updateReview.userId !== userId){
+            const notAuth = new Error("Forbidden");
+            notAuth.status = 403;
+            return next(notAuth);
+          };
 
         await review.destroy();
 
