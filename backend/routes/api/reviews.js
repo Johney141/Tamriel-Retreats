@@ -84,8 +84,17 @@ router.get('/:spotId', async (req, res, next) => {
     }
 });
 
-
-router.post('/:spotId', requireAuth, async (req, res, next) => {
+const validateReview = [
+    check('review')
+        .exists({checkFalsy: true})
+        .withMessage('Review text is required'),
+    check('stars')
+        .exists({checkFalsy: true})
+        .isInt({min: 1, max: 5})
+        .withMessage('Stars must be an integer from 1 to 5'),
+    handleValidationErrors
+]
+router.post('/:spotId', requireAuth, validateReview, async (req, res, next) => {
     try {
         const spotId = parseInt(req.params.spotId);
         const userId = req.user.id
@@ -122,7 +131,7 @@ router.post('/:spotId', requireAuth, async (req, res, next) => {
     }
 })
 
-router.put('/:reviewId', requireAuth, async (req, res, next) => {
+router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => {
     try {
         const userId = req.user.id;
         const reviewId = parseInt(req.params.reviewId);
@@ -155,6 +164,28 @@ router.put('/:reviewId', requireAuth, async (req, res, next) => {
     }
 })
 
+
+router.delete('/:reviewId', requireAuth, async (req, res, next) => {
+    try {
+        const reviewId = parseInt(req.params.reviewId);
+        const review = await Review.findByPk(reviewId);
+
+        if(!review){
+            const noReview = new Error("Review couldn't be found");
+            noReview.status = 404;
+            return next(noReview);
+        }
+
+        await review.destroy();
+
+        res.json({
+            message: "Successfully deleted"
+        })
+
+    } catch (error) {
+        next(error);
+    }
+})
 
 
 module.exports = router;
