@@ -38,6 +38,12 @@ const fullSpots = async (spots) => {
     return updatedSpots
 }
 
+
+
+
+
+
+
 const fullSpot = (spot) => {
     let updatedSpot = {
         id: spot.id,

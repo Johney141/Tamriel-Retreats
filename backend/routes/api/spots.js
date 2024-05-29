@@ -117,6 +117,41 @@ router.get('/:spotId', async (req, res, next) => {
     }
 });
 
+const validateSpot = [
+    check('address')
+        .exists({checkFalsy: true})
+        .withMessage('Street address is required'),
+    check('city')
+        .exists({checkFalsy: true})
+        .withMessage('City is required'),
+    check('state')
+        .exists({checkFalsy: true})
+        .withMessage('State is required'),
+    check('country')
+        .exists({checkFalsy: true})
+        .withMessage('Country is required'),
+    check('lat')
+        .exists({checkFalsy: true})
+        .isFloat({min: -90, max: 90})
+        .withMessage('Latitude is not valid'),
+    check('lng')
+        .exists({checkFalsy: true})
+        .isFloat({min: -180, max: 180})
+        .withMessage('Longitude is not valid'),
+    check('name')
+        .exists({checkFalsy: true})
+        .isString()
+        .isLength({min: 51})
+        .withMessage("Name must be less than 50 characters"),
+    check('description')
+        .exists({checkFalsy: true})
+        .withMessage("Description is required"),
+    check('price')
+        .exists({checkFalsy: true})
+        .withMessage('Price per day is required'),
+    handleValidationErrors
+]
+
 router.post('/', requireAuth, async (req, res, next) => {
     try {
         const { address, city, state, country, lat, lng, name, description, price } = req.body;
@@ -141,6 +176,40 @@ router.post('/', requireAuth, async (req, res, next) => {
     }
 })
 
+router.post('/:spotId', requireAuth, async (req, res, next) => {
+    try {
+        const spotId = parseInt(req.params.spotId);
+        const userId = req.user.id;
+        const spot = await Spot.findByPk(spotId);
+
+        if(!spot) {
+            const noSpot = new Error("Spot couldn't be found");
+            noSpot.status = 404
+            next(noSpot)
+        }
+
+        if(spot.ownerId !== userId) {
+            const notAuth = new Error("Forbidden")
+            notAuth.status = 403
+            next(notAuth)
+        }
+
+        const { url, preview } = req.body;
+        const newSpotImage = SpotImage.create({
+            url,
+            spotId,
+            isPreview: preview
+        });
+
+        res.json({
+            id: newSpotImage.id,
+            url: newSpotImage.url,
+            preview: newSpotImage.isPreview
+        })
+    } catch (error) {
+        next(error);
+    }
+})
 
 router.put('/:spotId', requireAuth, async (req, res, next) => {
     try {
