@@ -1,5 +1,4 @@
 const express = require('express')
-const bcrypt = require('bcryptjs');
 
 const { restoreUser, requireAuth } = require('../../utils/auth');
 const { Spot, Review, ReviewImage, User, SpotImage} = require('../../db/models');
@@ -222,7 +221,7 @@ router.delete('/:reviewId', requireAuth, async (req, res, next) => {
             return next(noReview);
         }
         
-        if(updateReview.userId !== userId){
+        if(review.userId !== userId){
             const notAuth = new Error("Forbidden");
             notAuth.status = 403;
             return next(notAuth);

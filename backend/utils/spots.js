@@ -24,7 +24,7 @@ const fullSpots = async (spots) => {
             let starSum = reviews.reduce((sum, review) => sum + review.stars, 0);
 
             updatedSpot.avgRating = starSum / reviewCount;
-        }
+        } 
         if(spot.SpotImages.length > 0){   
             // Add Preview Image
             const previewImage = spot.SpotImages[0]
@@ -69,7 +69,7 @@ const fullSpot = (spot) => {
 
         updatedSpot.numReviews = numReviews;
         updatedSpot.avgStarRating = avgRating;
-    }
+    } 
 
     if(spot.SpotImages.length > 0) {
         updatedSpot.SpotImages = spot.SpotImages;

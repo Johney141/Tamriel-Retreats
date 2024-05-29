@@ -152,7 +152,7 @@ const validateSpot = [
     handleValidationErrors
 ]
 
-router.post('/', requireAuth, async (req, res, next) => {
+router.post('/', requireAuth, validateSpot, async (req, res, next) => {
     try {
         const { address, city, state, country, lat, lng, name, description, price } = req.body;
         const ownerId = req.user.id;
@@ -211,7 +211,7 @@ router.post('/:spotId', requireAuth, async (req, res, next) => {
     }
 })
 
-router.put('/:spotId', requireAuth, async (req, res, next) => {
+router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
     try {
         const spotId = parseInt(req.params.spotId);
         const userId = req.user.id;
