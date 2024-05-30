@@ -27,6 +27,8 @@ const addPreview = (reviews) => {
             const previewImage = review.Spot.SpotImages[0];
             const previewUrl = previewImage.url;
             Spot.previewImage = previewUrl;
+        } else {
+            Spot.previewImage = null
         }
         updatedReview.Spot = Spot;
         updatedReview.ReviewImages = review.ReviewImages;
