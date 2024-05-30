@@ -1,10 +1,10 @@
 const express = require('express')
 
 const { restoreUser, requireAuth } = require('../../utils/auth');
-const { Spot, User, Booking} = require('../../db/models');
+const { Spot, User, Booking, SpotImage} = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const { fullBooking } = require('../../utils/bookings');
+const { fullBooking, ownerBookings, checkOverlap } = require('../../utils/bookings');
 
 
 const router = express.Router();
@@ -30,6 +30,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
                 }
             ]
         })
+        console.log(bookings)
 
         if(!bookings) {
             const noBookings = new Error('Current User does not have any bookings');
@@ -38,6 +39,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
         };
 
         const updatedBooking = fullBooking(bookings)
+        console.log(updatedBooking)
 
         res.json({
             Bookings: updatedBooking
@@ -47,6 +49,109 @@ router.get('/current', requireAuth, async (req, res, next) => {
         next(error)
     }
 })
+
+
+router.get('/:spotId', requireAuth, async(req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const spotId = parseInt(req.params.spotId);
+        const spot = await Spot.findByPk(spotId);
+
+        if(!spot) {
+            const noSpot = new Error("Spot couldn't be found");
+            noSpot.status = 404;
+            return next(noSpot);
+        }
+        // If user is not the owner
+        if(spot.ownerId !== userId) {
+            const bookings = await Booking.findAll({
+                where: {
+                    spotId
+                },
+                attributes: ['spotId', 'startDate', 'endDate']
+            })
+
+            return res.json({
+                Bookings: bookings
+            })
+        // If user is the owner
+        } else {
+            const bookings = await Booking.findAll({
+                where: {
+                    spotId
+                },
+                include: [
+                    {
+                        model: User,
+                        attributes: ['id', 'firstName', 'lastName']
+                    }
+                ]
+            })
+            const updatedBookings = ownerBookings(bookings);
+
+            return res.json({
+                Bookings: updatedBookings
+            })
+
+        }
+
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.post('/:spotId', requireAuth, async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const spotId = parseInt(req.params.spotId);
+        let { startDate, endDate } = req.body;
+        const spot = await Spot.findByPk(spotId);
+        if(!spot){
+            const noSpot = new Error("Spot couldn't be found");
+            noSpot.status = 404
+            return next(noSpot);
+        }
+
+        const currentBookings = await Booking.findAll({
+            where: {
+                spotId
+            }
+        });
+
+        startDate = new Date(startDate);
+        endDate = new Date(endDate);
+        const overlaps = checkOverlap(startDate, endDate, currentBookings)
+
+        if(overlaps.hasOverlap) {
+            const overlapError = new Error('Sorry, this spot is already booked for the specified dates');
+            overlapError.status = 403;
+            overlapError.errors = {};
+
+            if(overlaps.startOverlap) {
+                overlapError.errors.startDate = "Start date conflicts with an existing booking";       
+            }
+
+            if(overlaps.endOverlap) {
+                overlapError.errors.endDate = "End date conflicts with an existing booking";
+            }
+
+            return next(overlapError);
+        }
+
+        const newBooking = await Booking.create({
+            spotId,
+            userId,
+            startDate,
+            endDate
+        })
+
+        
+        return res.json(newBooking)
+    } catch (error) {
+        next(error);
+    }
+})
+
 
 
 module.exports = router
