@@ -100,6 +100,9 @@ router.get('/:spotId', requireAuth, async(req, res, next) => {
     }
 })
 
+const validateBooking = [
+    check('date')
+]
 router.post('/:spotId', requireAuth, async (req, res, next) => {
     try {
         const userId = req.user.id;
@@ -147,6 +150,99 @@ router.post('/:spotId', requireAuth, async (req, res, next) => {
 
         
         return res.json(newBooking)
+    } catch (error) {
+        next(error);
+    }
+})
+
+router.put('/:bookingId', requireAuth, async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const bookingId = parseInt(req.params.bookingId);
+        let { startDate, endDate } = req.body;
+        const booking = await Booking.findByPk(bookingId);
+        
+        if(!booking){
+            const noBooking = new Error("Booking couldn't be found");
+            noSpot.status = 404
+            return next(noSpot);
+        }
+
+        if(booking.userId !== userId) {
+            const notAuth = new Error('Forbidden');
+            notAuth.status = 403;
+            return next(notAuth);
+        }
+        const spotId = booking.spotId;
+
+        const currentBookings = await Booking.findAll({
+            where: {
+                spotId
+            }
+        });
+
+        startDate = new Date(startDate);
+        endDate = new Date(endDate);
+        const overlaps = checkOverlap(startDate, endDate, currentBookings)
+
+        if(overlaps.hasOverlap) {
+            const overlapError = new Error('Sorry, this spot is already booked for the specified dates');
+            overlapError.status = 403;
+            overlapError.errors = {};
+
+            if(overlaps.startOverlap) {
+                overlapError.errors.startDate = "Start date conflicts with an existing booking";       
+            }
+
+            if(overlaps.endOverlap) {
+                overlapError.errors.endDate = "End date conflicts with an existing booking";
+            }
+
+            return next(overlapError);
+        }
+
+        await booking.update({
+            startDate,
+            endDate
+        })
+
+        res.json(booking)
+
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.delete('/:bookingId', requireAuth, async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const bookingId = parseInt(req.params.bookingId);
+        const booking = await Booking.findByPk(bookingId);
+
+        if(!booking) {
+            const noBooking = new Error("Booking couldn't be found")
+            noBooking.status = 404;
+            return next(noBooking);
+        }
+        if(booking.userId !== userId){
+            const notAuth = new Error('Forbidden');
+            notAuth.status = 403;
+            return next(notAuth);
+        }
+        const currentDate = new Date();
+        if(booking.startDate >= currentDate){
+            const bookingStarted = new Error("Bookings that have been started can't be deleted");
+            bookingStarted.status = 403;
+            return next(bookingStarted)
+        }
+
+        await booking.destroy();
+
+        return res.json({
+            message: "Successfully deleted"
+          })
+
+
     } catch (error) {
         next(error);
     }
