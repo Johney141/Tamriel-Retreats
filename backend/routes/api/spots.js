@@ -176,6 +176,36 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
     }
 })
 
+router.delete('/images/:imageId', requireAuth, async (req, res, next) => {
+    try {
+        const imgId = parseInt(req.params.imageId);
+        const userId = req.user.id;
+        const spotImg = await SpotImage.findByPk(imgId);
+        const spot = await Spot.findByPk(spotImg.spotId);
+
+        if(!spotImg) {
+            const noSpot = new Error("Spot Image couldn't be found");
+            noSpot.status = 404
+            return next(noSpot)
+        }
+
+        if(spot.ownerId !== userId) {
+            const notAuth = new Error("Forbidden")
+            notAuth.status = 403
+            return next(notAuth)
+        }
+
+        await spotImg.destroy();
+
+        return res.json({
+            message: "Successfully deleted"
+          })
+
+    } catch (error) {
+        next(error);
+    }
+})
+
 router.post('/:spotId', requireAuth, async (req, res, next) => {
     try {
         const spotId = parseInt(req.params.spotId);
@@ -185,13 +215,13 @@ router.post('/:spotId', requireAuth, async (req, res, next) => {
         if(!spot) {
             const noSpot = new Error("Spot couldn't be found");
             noSpot.status = 404
-            next(noSpot)
+            return next(noSpot)
         }
 
         if(spot.ownerId !== userId) {
             const notAuth = new Error("Forbidden")
             notAuth.status = 403
-            next(notAuth)
+            return next(notAuth)
         }
 
         const { url, preview } = req.body;
@@ -201,7 +231,7 @@ router.post('/:spotId', requireAuth, async (req, res, next) => {
             isPreview: preview
         });
 
-        res.json({
+        return res.json({
             id: newSpotImage.id,
             url: newSpotImage.url,
             preview: newSpotImage.isPreview
@@ -222,13 +252,13 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
         if(!spot) {
             const noSpot = new Error("Spot couldn't be found");
             noSpot.status = 404
-            next(noSpot)
+            return next(noSpot)
         }
 
         if(spot.ownerId !== userId) {
             const notAuth = new Error("Forbidden")
             notAuth.status = 403
-            next(notAuth)
+            return next(notAuth)
         }
         
 
@@ -245,7 +275,7 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
             ownerId: userId
         })
 
-        res.json(spot);
+        return res.json(spot);
 
     } catch (error) {
         next(error);
@@ -262,18 +292,18 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
         if(!spot) {
             const noSpot = new Error("Spot couldn't be found");
             noSpot.status = 404
-            next(noSpot)
+            return next(noSpot)
         }
 
         if(spot.ownerId !== userId) {
             const notAuth = new Error("Forbidden")
             notAuth.status = 403
-            next(notAuth)
+            return next(notAuth)
         }
         
         await spot.destroy();
 
-        res.json({
+        return res.json({
             message: "Successfully deleted"
           })
 

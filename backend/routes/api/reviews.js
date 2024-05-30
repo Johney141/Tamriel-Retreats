@@ -208,7 +208,35 @@ router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => 
     }
 })
 
+router.delete('/images/:imageId', requireAuth, async (req, res, next) => {
+    try {
+        const imgId = parseInt(req.params.imageId);
+        const userId = req.user.id;
+        const reviewImg = await ReviewImage.findByPk(imgId);
+        const review = await Review.findByPk(reviewImg.reviewId);
 
+        if(!reviewImg) {
+            const noReview = new Error("Review Image couldn't be found");
+            noReview.status = 404
+            return next(noReview)
+        }
+
+        if(review.userId !== userId) {
+            const notAuth = new Error("Forbidden")
+            notAuth.status = 403
+            return next(notAuth)
+        }
+
+        await reviewImg.destroy();
+
+        return res.json({
+            message: "Successfully deleted"
+          })
+
+    } catch (error) {
+        next(error);
+    }
+})
 router.delete('/:reviewId', requireAuth, async (req, res, next) => {
     try {
         const userId = req.user.id;

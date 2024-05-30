@@ -115,6 +115,12 @@ router.post('/:spotId', requireAuth, async (req, res, next) => {
             return next(noSpot);
         }
 
+        if(spot.ownerId === userId) {
+            const cannotOwn = new Error("Forbidden");
+            cannotOwn.status = 403;
+            return next(cannotOwn);
+        }
+
         const currentBookings = await Booking.findAll({
             where: {
                 spotId
@@ -174,9 +180,9 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
             return next(notAuth);
         }
         const currentDate = new Date();
-        if(booking.startDate <= currentDate){
+        if(booking.endDate <= currentDate){
             const pastBooking = new Error("Past bookings can't be modified");
-            pastBooking.status = 403;
+            pastBooking.status = 400;
             return next(pastBooking)
         }
         const spotId = booking.spotId;
@@ -224,13 +230,14 @@ router.delete('/:bookingId', requireAuth, async (req, res, next) => {
         const userId = req.user.id;
         const bookingId = parseInt(req.params.bookingId);
         const booking = await Booking.findByPk(bookingId);
+        const spot = await Spot.findByPk(booking.spotId)
 
         if(!booking) {
             const noBooking = new Error("Booking couldn't be found")
             noBooking.status = 404;
             return next(noBooking);
         }
-        if(booking.userId !== userId){
+        if(booking.userId !== userId  || spot.ownerId !== userId){
             const notAuth = new Error('Forbidden');
             notAuth.status = 403;
             return next(notAuth);
