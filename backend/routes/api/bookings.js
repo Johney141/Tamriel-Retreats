@@ -38,7 +38,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
             return next(noBookings);
         };
 
-        const updatedBooking = fullBooking(bookings)
+        const updatedBooking = fullBooking(bookings);
         console.log(updatedBooking)
 
         res.json({
