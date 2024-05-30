@@ -100,9 +100,9 @@ router.get('/:spotId', requireAuth, async(req, res, next) => {
     }
 })
 
-const validateBooking = [
-    check('date')
-]
+// const validateBooking = [
+//     check('date')
+// ]
 router.post('/:spotId', requireAuth, async (req, res, next) => {
     try {
         const userId = req.user.id;
@@ -164,14 +164,20 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
         
         if(!booking){
             const noBooking = new Error("Booking couldn't be found");
-            noSpot.status = 404
-            return next(noSpot);
+            noBooking.status = 404
+            return next(noBooking);
         }
 
         if(booking.userId !== userId) {
             const notAuth = new Error('Forbidden');
             notAuth.status = 403;
             return next(notAuth);
+        }
+        const currentDate = new Date();
+        if(booking.startDate <= currentDate){
+            const pastBooking = new Error("Past bookings can't be modified");
+            pastBooking.status = 403;
+            return next(pastBooking)
         }
         const spotId = booking.spotId;
 
@@ -230,7 +236,7 @@ router.delete('/:bookingId', requireAuth, async (req, res, next) => {
             return next(notAuth);
         }
         const currentDate = new Date();
-        if(booking.startDate >= currentDate){
+        if(booking.startDate <= currentDate){
             const bookingStarted = new Error("Bookings that have been started can't be deleted");
             bookingStarted.status = 403;
             return next(bookingStarted)
