@@ -84,7 +84,7 @@ app.use((err, _req, res, _next) => {
       response.stack = err.stack
     }
     if(err.errors) {
-      response.errors = error.errors;
+      response.errors = err.errors;
     }
 
     res.json(response);
