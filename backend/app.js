@@ -83,7 +83,7 @@ app.use((err, _req, res, _next) => {
     if(!isProduction) {
       response.stack = err.stack
     }
-    if(error.errors) {
+    if(err.errors) {
       response.errors = error.errors;
     }
 
