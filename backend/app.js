@@ -77,11 +77,17 @@ app.use((err, _req, _res, next) => {
 app.use((err, _req, res, _next) => {
     res.status(err.status || 500);
     console.error(err);
-    res.json({
+    const response = {
       message: err.message,
-      errors: err.errors,
-      stack: isProduction ? null : err.stack
-    });
+    }
+    if(!isProduction) {
+      response.stack = err.stack
+    }
+    if(error.errors) {
+      response.errors = error.errors;
+    }
+
+    res.json(response);
 });
 
 module.exports = app;

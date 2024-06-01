@@ -24,7 +24,9 @@ const fullSpots = async (spots) => {
             let starSum = reviews.reduce((sum, review) => sum + review.stars, 0);
 
             updatedSpot.avgRating = starSum / reviewCount;
-        } 
+        } else {
+            updatedSpot.avgRating = null;
+        }
         if(spot.SpotImages.length > 0){   
             // Add Preview Image
             const previewImage = spot.SpotImages[0]
@@ -32,6 +34,8 @@ const fullSpots = async (spots) => {
             updatedSpot.previewImage = previewImage.url;
 
             
+        } else {
+            updatedSpot.previewImage = null;
         }
         updatedSpots.push(updatedSpot)
     }
@@ -69,10 +73,15 @@ const fullSpot = (spot) => {
 
         updatedSpot.numReviews = numReviews;
         updatedSpot.avgStarRating = avgRating;
-    } 
+    } else {
+        updatedSpot.numReviews = null;
+        updatedSpot.avgStarRating = null;
+    }
 
     if(spot.SpotImages.length > 0) {
         updatedSpot.SpotImages = spot.SpotImages;
+    } else {
+        updatedSpot.SpotImages = null;
     }
     updatedSpot.Owner = spot.Owner;
 
