@@ -302,7 +302,7 @@ router.delete('/images/:imageId', requireAuth, async (req, res, next) => {
         next(error);
     }
 })
-router.get('/:spotId', async (req, res, next) => {
+router.get('/:spotId/reviews', async (req, res, next) => {
     try {
         const spotId = parseInt(req.params.spotId);
         const reviews = await Review.findAll({
