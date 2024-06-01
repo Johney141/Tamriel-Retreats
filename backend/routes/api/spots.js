@@ -6,6 +6,7 @@ const { Spot, Review, SpotImage, User } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { fullSpots, fullSpot } = require('../../utils/spots')
+const { Op, where } = require('sequelize')
 
 
 
@@ -13,9 +14,100 @@ const router = express.Router();
 
 router.use(restoreUser)
 
-router.get('/', async (req, res, next) => {
+const validateQuerys = [
+    check('page')
+        .optional()
+        .isInt({min: 1})
+        .withMessage('Page must be greater than or equal to 1'),
+    check('size')
+        .optional()
+        .isInt({min: 1})
+        .withMessage('Size must be greater than or equal to 1'),
+    check('maxLat')
+        .optional()
+        .isFloat({min: -90, max: 90})
+        .withMessage('Maximum latitude is invalid'),
+    check('minLat')
+        .optional()
+        .isFloat({min: -90, max: 90})
+        .withMessage('Minimum latitude is invalid'),
+    check('maxLng')
+        .optional()
+        .isFloat({min: -180, max: 180})
+        .withMessage('Maximum longitude is invalid'),
+    check('minLng')
+        .optional()
+        .isFloat({min: -180, max: 180})
+        .withMessage('Minimum longitude is invalid'),
+    check('minPrice')
+        .optional()
+        .isInt({min: 0})
+        .withMessage('Minimum price must be greater than or equal to 0'),
+    check('minPrice')
+        .optional()
+        .isInt({min: 0})
+        .withMessage('Minimum price must be greater than or equal to 0'),
+    handleValidationErrors
+
+]
+
+router.get('/',validateQuerys , async (req, res, next) => {
     try {
+        let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+
+
+
+        if(size) {
+            size = parseInt(size);
+        }
+        if(page){
+            page = parseInt(page);
+            page = (page - 1) * size;
+        }
+        const where = {};
+        if(minLat) {
+            minLat = parseFloat(minLat);
+            where.lat = {
+                [Op.gte]: minLat
+            }
+        }
+        if(maxLat) {
+            maxLat = parseFloat(maxLat);
+            where.lat = {...where.lat,
+                [Op.lte]: maxLat
+            }
+        }
+        if(minLng) {
+            minLng = parseFloat(minLng);
+            where.lng = {
+                [Op.gte]: minLng
+            }
+        }
+        if(maxLng) {
+            maxLng = parseFloat(maxLng);
+            where.lng = {...where.lng,
+                [Op.lte]: maxLng
+            }
+        }
+        if(minPrice) {
+            minPrice = parseInt(minPrice);
+            where.price = {
+                [Op.gte]: minPrice
+            }
+        }
+        if(maxPrice) {
+            maxPrice = parseInt(maxPrice);
+            where.price = {
+                [Op.lte]: maxPrice
+            }
+        }
+
+
+
         const spots = await Spot.findAll({
+            limit: size,
+            offset: page,
+            where,
             include: [
                 {
                     model: Review,
@@ -141,13 +233,14 @@ const validateSpot = [
     check('name')
         .exists({checkFalsy: true})
         .isString()
-        .isLength({min: 51})
+        .isLength({max: 50})
         .withMessage("Name must be less than 50 characters"),
     check('description')
         .exists({checkFalsy: true})
         .withMessage("Description is required"),
     check('price')
         .exists({checkFalsy: true})
+        .isInt({min: 1})
         .withMessage('Price per day is required'),
     handleValidationErrors
 ]
@@ -155,6 +248,7 @@ const validateSpot = [
 router.post('/', requireAuth, validateSpot, async (req, res, next) => {
     try {
         const { address, city, state, country, lat, lng, name, description, price } = req.body;
+
         const ownerId = req.user.id;
         const newSpot = await Spot.create({
             address,
@@ -169,7 +263,10 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
             ownerId
         })
 
-        res.json(newSpot);
+        let responseSpot = {...newSpot.dataValues};
+        delete responseSpot.ownerId
+
+        return res.json(responseSpot).status(201);
 
     } catch (error) {
         next(error)
@@ -206,7 +303,7 @@ router.delete('/images/:imageId', requireAuth, async (req, res, next) => {
     }
 })
 
-router.post('/:spotId', requireAuth, async (req, res, next) => {
+router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     try {
         const spotId = parseInt(req.params.spotId);
         const userId = req.user.id;
@@ -225,7 +322,7 @@ router.post('/:spotId', requireAuth, async (req, res, next) => {
         }
 
         const { url, preview } = req.body;
-        const newSpotImage = SpotImage.create({
+        const newSpotImage = await SpotImage.create({
             url,
             spotId,
             isPreview: preview
