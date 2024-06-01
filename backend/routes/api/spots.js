@@ -265,8 +265,8 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
 
         let responseSpot = {...newSpot.dataValues};
         delete responseSpot.ownerId
-
-        return res.json(responseSpot).status(201);
+        
+        return res.status(201).json(responseSpot);
 
     } catch (error) {
         next(error)
