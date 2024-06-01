@@ -290,7 +290,7 @@ Returns all the spots owned (created) by the current user.
 * Require Authentication: true
 * Request
   * Method: GET
-  * URL: /api/users/current/spots
+  * URL: /api/spots/current
   * Body: none
 
 * Successful Response
@@ -826,7 +826,7 @@ Create and return a new image for a review specified by id.
 * Require proper authorization: Review must belong to the current user
 * Request
   * Method: POST
-  * URL: /api/reviews/:reviewId
+  * URL: /api/reviews/:reviewId/images
   * Headers:
     * Content-Type: application/json
   * Body:
