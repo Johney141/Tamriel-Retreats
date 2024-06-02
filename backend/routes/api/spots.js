@@ -305,6 +305,13 @@ router.delete('/images/:imageId', requireAuth, async (req, res, next) => {
 router.get('/:spotId/reviews', async (req, res, next) => {
     try {
         const spotId = parseInt(req.params.spotId);
+        const spot = await Spot.findByPk(spotId)
+        
+        if(!spot) {
+            const noSpots = new Error("Spot couldn't be found")
+            noSpots.status = 404;
+            return next(noSpots);
+        }
         const reviews = await Review.findAll({
             where: { spotId },
             include: [
