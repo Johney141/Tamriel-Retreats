@@ -7,7 +7,7 @@ const fullBooking = (bookings) => {
         }
 
         const Spot = {
-            id: booking.Spots.id,
+            id: booking.Spot.id,
             ownerId: booking.Spot.ownerId,
             address: booking.Spot.address,
             city: booking.Spot.city,
