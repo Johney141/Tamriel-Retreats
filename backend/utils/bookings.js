@@ -27,8 +27,8 @@ const fullBooking = (bookings) => {
         updatedBooking = {...updatedBooking,
             Spot,
             userId: booking.userId,
-            startDate: booking.startDate,
-            endDate: booking.endDate,
+            startDate: booking.startDate.toISOString().slice(0, 10),
+            endDate: booking.endDate.toISOString().slice(0, 10),
             createdAt: booking.createdAt,
             updatedAt: booking.updatedAt
         }
@@ -48,8 +48,8 @@ const ownerBookings = (bookings) => {
             id: booking.id,
             spotId: booking.spotId,
             userId: booking.userId,
-            startDate: booking.startDate,
-            endDate: booking.endDate,
+            startDate: booking.startDate.toISOString().slice(0, 10),
+            endDate: booking.endDate.toISOString().slice(0, 10),
             createdAt: booking.createdAt,
             updatedAt: booking.updatedAt
         }
