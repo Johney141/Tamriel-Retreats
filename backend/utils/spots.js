@@ -3,6 +3,7 @@ const fullSpots = async (spots) => {
     for(let spot of spots){
         let updatedSpot = {
             id: spot.id,
+            ownerId: spot.ownerId,
             address: spot.address,
             city: spot.city,
             state: spot.state,
@@ -12,7 +13,6 @@ const fullSpots = async (spots) => {
             name: spot.name,
             description: spot.description,
             price: spot.price,
-            ownerId: spot.ownerId,
             createdAt: spot.createdAt,
             updatedAt: spot.updatedAt,
         };
@@ -51,6 +51,7 @@ const fullSpots = async (spots) => {
 const fullSpot = (spot) => {
     let updatedSpot = {
         id: spot.id,
+        ownerId: spot.ownerId,
         address: spot.address,
         city: spot.city,
         state: spot.state,
@@ -60,7 +61,6 @@ const fullSpot = (spot) => {
         name: spot.name,
         description: spot.description,
         price: spot.price,
-        ownerId: spot.ownerId,
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
     };
