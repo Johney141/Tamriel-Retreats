@@ -347,9 +347,18 @@ router.get('/:spotId/bookings', requireAuth, async(req, res, next) => {
                 },
                 attributes: ['spotId', 'startDate', 'endDate']
             })
+            let updatedBookings = []
+            for(let booking of bookings){
+                let updatedBooking = {
+                    spotId: booking.spotId,
+                    startDate: booking.startDate.substring(0, 10),
+                    endDate: booking.endDate.substring(0, 10)
+                }
+                updatedBookings.push(updatedBooking)
+            }
 
             return res.json({
-                Bookings: bookings
+                Bookings: updatedBookings
             })
         // If user is the owner
         } else {
