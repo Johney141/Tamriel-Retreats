@@ -520,7 +520,9 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         }
         
         if(startDate <= currentDate) {
-            const pastBooking = new Error('')
+            const pastBooking = new Error('Cannot have booking in the past');
+            pastBooking.status = 400;
+            return next(pastBooking)
         }
 
         const newBooking = await Booking.create({
@@ -530,8 +532,17 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
             endDate
         })
 
+        const response = {
+            id: newBooking.id,
+            spotId: newBooking.spotId,
+            userId: newBooking.userId,
+            startDate: newBooking.startDate.toISOString().slice(0, 10),
+            endDate: newBooking.endDate.toISOString().slice(0, 10),
+            createdAt: newBooking.createdAt,
+            updatedAt: newBooking.updatedAt
+        }
         
-        return res.status(201).json(newBooking)
+        return res.status(201).json(response)
     } catch (error) {
         next(error);
     }

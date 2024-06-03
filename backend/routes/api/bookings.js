@@ -39,7 +39,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
         };
 
         const updatedBooking = fullBooking(bookings);
-        console.log(updatedBooking)
+
 
         res.json({
             Bookings: updatedBooking
@@ -112,8 +112,16 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
             startDate,
             endDate
         })
-
-        res.json(booking)
+        const response = {
+            id: booking.id,
+            spotId: booking.spotId,
+            userId: booking.userId,
+            startDate: booking.startDate.toISOString().slice(0, 10),
+            endDate: booking.endDate.toISOString().slice(0, 10),
+            createdAt: booking.createdAt,
+            updatedAt: booking.updatedAt
+        }
+        res.json(response)
 
     } catch (error) {
         next(error)
