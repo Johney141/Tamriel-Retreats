@@ -500,6 +500,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
         startDate = new Date(startDate);
         endDate = new Date(endDate);
+        let currentDate = new Date();
         const overlaps = checkOverlap(startDate, endDate, currentBookings)
 
         if(overlaps.hasOverlap) {
@@ -516,6 +517,10 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
             }
 
             return next(overlapError);
+        }
+        
+        if(startDate <= currentDate) {
+            const pastBooking = new Error('')
         }
 
         const newBooking = await Booking.create({
