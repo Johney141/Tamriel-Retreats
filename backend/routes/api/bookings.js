@@ -132,7 +132,7 @@ router.delete('/:bookingId', requireAuth, async (req, res, next) => {
             noBooking.status = 404;
             return next(noBooking);
         }
-        if(booking.userId !== userId  || spot.ownerId !== userId){
+        if(booking.userId !== userId  && spot.ownerId !== userId){
             const notAuth = new Error('Forbidden');
             notAuth.status = 403;
             return next(notAuth);
