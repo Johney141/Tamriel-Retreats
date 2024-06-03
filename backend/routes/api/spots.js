@@ -7,6 +7,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { fullSpots, fullSpot } = require('../../utils/spots')
 const { Op, where } = require('sequelize')
+const { fullBooking, ownerBookings, checkOverlap } = require('../../utils/bookings');
 
 
 
@@ -248,6 +249,10 @@ const validateSpot = [
 router.post('/', requireAuth, validateSpot, async (req, res, next) => {
     try {
         const { address, city, state, country, lat, lng, name, description, price } = req.body;
+        lat = parseFloat(lat)
+        lng = parseFloat(lng)
+        price = parseInt(price)
+
 
         const ownerId = req.user.id;
         const newSpot = await Spot.create({
@@ -263,8 +268,21 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
             ownerId
         })
 
-        let responseSpot = {...newSpot.dataValues};
-        delete responseSpot.ownerId
+        let responseSpot = {
+            id: newSpot.id,
+            ownerId: newSpot.ownerId,
+            address: newSpot.address,
+            city: newSpot.city,
+            state: newSpot.state,
+            country: newSpot.country,
+            lat: newSpot.lat,
+            lng: newSpot.lng,
+            name: newSpot.name,
+            description: newSpot.description,
+            price: 123,
+            createdAt: newSpot.createdAt,
+            updatedAt: newSpot.updatedAt
+        }
         
         return res.status(201).json(responseSpot);
 
@@ -273,38 +291,17 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
     }
 })
 
-router.delete('/images/:imageId', requireAuth, async (req, res, next) => {
-    try {
-        const imgId = parseInt(req.params.imageId);
-        const userId = req.user.id;
-        const spotImg = await SpotImage.findByPk(imgId);
-        const spot = await Spot.findByPk(spotImg.spotId);
 
-        if(!spotImg) {
-            const noSpot = new Error("Spot Image couldn't be found");
-            noSpot.status = 404
-            return next(noSpot)
-        }
-
-        if(spot.ownerId !== userId) {
-            const notAuth = new Error("Forbidden")
-            notAuth.status = 403
-            return next(notAuth)
-        }
-
-        await spotImg.destroy();
-
-        return res.json({
-            message: "Successfully deleted"
-          })
-
-    } catch (error) {
-        next(error);
-    }
-})
 router.get('/:spotId/reviews', async (req, res, next) => {
     try {
         const spotId = parseInt(req.params.spotId);
+        const spot = await Spot.findByPk(spotId)
+        
+        if(!spot) {
+            const noSpots = new Error("Spot couldn't be found")
+            noSpots.status = 404;
+            return next(noSpots);
+        }
         const reviews = await Review.findAll({
             where: { spotId },
             include: [
@@ -331,6 +328,54 @@ router.get('/:spotId/reviews', async (req, res, next) => {
         next(error);
     }
 });
+router.get('/:spotId/bookings', requireAuth, async(req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const spotId = parseInt(req.params.spotId);
+        const spot = await Spot.findByPk(spotId);
+
+        if(!spot) {
+            const noSpot = new Error("Spot couldn't be found");
+            noSpot.status = 404;
+            return next(noSpot);
+        }
+        // If user is not the owner
+        if(spot.ownerId !== userId) {
+            const bookings = await Booking.findAll({
+                where: {
+                    spotId
+                },
+                attributes: ['spotId', 'startDate', 'endDate']
+            })
+
+            return res.json({
+                Bookings: bookings
+            })
+        // If user is the owner
+        } else {
+            const bookings = await Booking.findAll({
+                where: {
+                    spotId
+                },
+                include: [
+                    {
+                        model: User,
+                        attributes: ['id', 'firstName', 'lastName']
+                    }
+                ]
+            })
+            const updatedBookings = ownerBookings(bookings);
+
+            return res.json({
+                Bookings: updatedBookings
+            })
+
+        }
+
+    } catch (error) {
+        next(error)
+    }
+})
 const validateReview = [
     check('review')
         .exists({checkFalsy: true})
@@ -372,7 +417,7 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
             stars
         });
     
-        res.json(newReview);
+        res.status(201).json(newReview);
     } catch (error) {
        next(error) 
     }
@@ -408,6 +453,63 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
             url: newSpotImage.url,
             preview: newSpotImage.isPreview
         })
+    } catch (error) {
+        next(error);
+    }
+})
+router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const spotId = parseInt(req.params.spotId);
+        let { startDate, endDate } = req.body;
+        const spot = await Spot.findByPk(spotId);
+        if(!spot){
+            const noSpot = new Error("Spot couldn't be found");
+            noSpot.status = 404
+            return next(noSpot);
+        }
+
+        if(spot.ownerId === userId) {
+            const cannotOwn = new Error("Forbidden");
+            cannotOwn.status = 403;
+            return next(cannotOwn);
+        }
+
+        const currentBookings = await Booking.findAll({
+            where: {
+                spotId
+            }
+        });
+
+        startDate = new Date(startDate);
+        endDate = new Date(endDate);
+        const overlaps = checkOverlap(startDate, endDate, currentBookings)
+
+        if(overlaps.hasOverlap) {
+            const overlapError = new Error('Sorry, this spot is already booked for the specified dates');
+            overlapError.status = 403;
+            overlapError.errors = {};
+
+            if(overlaps.startOverlap) {
+                overlapError.errors.startDate = "Start date conflicts with an existing booking";       
+            }
+
+            if(overlaps.endOverlap) {
+                overlapError.errors.endDate = "End date conflicts with an existing booking";
+            }
+
+            return next(overlapError);
+        }
+
+        const newBooking = await Booking.create({
+            spotId,
+            userId,
+            startDate,
+            endDate
+        })
+
+        
+        return res.status(201).json(newBooking)
     } catch (error) {
         next(error);
     }
