@@ -55,15 +55,21 @@ const validateQuerys = [
 router.get('/',validateQuerys , async (req, res, next) => {
     try {
         let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
-
+        let response = {};
 
 
         if(size) {
             size = parseInt(size);
+            response.size = size;
         }
         if(page){
             page = parseInt(page);
-            page = (page - 1) * size;
+            if(!size) {
+                page = 0;
+            
+            } else {
+                page = (page - 1) * size;
+            }
         }
         const where = {};
         if(minLat) {
@@ -129,6 +135,8 @@ router.get('/',validateQuerys , async (req, res, next) => {
         }
         
         let updatedSpots = await fullSpots(spots)
+        response.Spots = updatedSpots;
+        
            
         res.json({
             Spots: updatedSpots

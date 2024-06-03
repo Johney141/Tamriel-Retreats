@@ -30,7 +30,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
                 }
             ]
         })
-        console.log(bookings)
+
 
         if(!bookings) {
             const noBookings = new Error('Current User does not have any bookings');
