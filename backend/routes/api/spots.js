@@ -351,8 +351,8 @@ router.get('/:spotId/bookings', requireAuth, async(req, res, next) => {
             for(let booking of bookings){
                 let updatedBooking = {
                     spotId: booking.spotId,
-                    startDate: booking.startDate.substring(0, 10),
-                    endDate: booking.endDate.substring(0, 10)
+                    startDate: booking.startDate.toJson().substring(0, 10),
+                    endDate: booking.endDate.toJson().substring(0, 10)
                 }
                 updatedBookings.push(updatedBooking)
             }
