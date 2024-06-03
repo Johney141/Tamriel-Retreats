@@ -125,13 +125,14 @@ router.delete('/:bookingId', requireAuth, async (req, res, next) => {
         const userId = req.user.id;
         const bookingId = parseInt(req.params.bookingId);
         const booking = await Booking.findByPk(bookingId);
-        const spot = await Spot.findByPk(booking.spotId)
+        
 
         if(!booking) {
             const noBooking = new Error("Booking couldn't be found")
             noBooking.status = 404;
             return next(noBooking);
         }
+        const spot = await Spot.findByPk(booking.spotId)
         if(booking.userId !== userId  && spot.ownerId !== userId){
             const notAuth = new Error('Forbidden');
             notAuth.status = 403;
