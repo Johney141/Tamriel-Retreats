@@ -248,7 +248,7 @@ const validateSpot = [
 
 router.post('/', requireAuth, validateSpot, async (req, res, next) => {
     try {
-        const { address, city, state, country, lat, lng, name, description, price } = req.body;
+        let { address, city, state, country, lat, lng, name, description, price } = req.body;
         lat = parseFloat(lat)
         lng = parseFloat(lng)
         price = parseInt(price)
