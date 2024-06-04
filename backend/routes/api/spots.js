@@ -139,7 +139,9 @@ router.get('/',validateQuerys , async (req, res, next) => {
         
            
         res.json({
-            Spots: updatedSpots
+            Spots: updatedSpots,
+            page,
+            size
         })
     } catch (error) {
         next(error)
