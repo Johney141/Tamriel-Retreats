@@ -33,7 +33,8 @@ router.get('/current', requireAuth, async (req, res, next) => {
                 },
                 {
                     model: ReviewImage,
-                    attributes: ['id', 'url']
+                    attributes: ['id', 'url'],
+                    require: true
                 }
             ]
         });
