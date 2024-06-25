@@ -65,7 +65,7 @@ router.get('/',validateQuerys , async (req, res, next) => {
         if(page){
             page = parseInt(page);
             if(!size) {
-                page = 0;
+                page = 1;
             
             } else {
                 page = (page - 1) * size;
