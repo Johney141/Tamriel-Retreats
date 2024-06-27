@@ -1,0 +1,14 @@
+.navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+#home-button {
+    cursor: pointer;
+    font-size: large;
+    font-weight: 400;
+    color: #FF385C;
+    border: none;
+    background: none;
+}
