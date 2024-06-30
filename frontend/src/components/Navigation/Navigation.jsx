@@ -1,52 +1,33 @@
-import { useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { FaAirbnb } from 'react-icons/fa';
 import ProfileButton from './ProfileButton';
-import { FaAirbnb } from "react-icons/fa";
-import './Navigation.css'
-import OpenModalButton from '../OpenModalButton/OpenModalButton';
-import LoginFormModal from '../LoginFormModal/LoginFormModal';
-import SignupFormModal from '../SignupFormModal/SignupFormModal';
+import './Navigation.css';
 
-function Navigation({ isLoaded }){
+function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
-  const navigate = useNavigate();
-
-  const sessionLinks = sessionUser ? (
-    <div>
-      <ProfileButton user={sessionUser} />
-    </div>
-  ) : (
-    <>
-      <div>
-        <OpenModalButton
-        buttonText={"Log In"}
-        modalComponent={<LoginFormModal />}/>
-      </div>
-      <div>
-        <OpenModalButton 
-          buttonText={"Sign Up"}
-          modalComponent={<SignupFormModal />}
-        />
-      </div>
-    </>
-  );
-
 
   const handleClick = () => {
     navigate('/')
   }
+
+
   return (
     <nav className='navbar'>
-      <div className='nav-item' >
-        <button
+      <div className='nav-item'>
+      <button
           id='home-button'
           onClick={handleClick}
         >
           <FaAirbnb />
           Tamriel Retreats
-        </button>
+      </button>
       </div>
-      {isLoaded && sessionLinks}
+      {isLoaded && (
+        <div>
+          <ProfileButton user={sessionUser} />
+        </div>
+      )}
     </nav>
   );
 }

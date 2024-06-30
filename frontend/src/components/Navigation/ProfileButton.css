@@ -1,3 +1,18 @@
 .hidden {
     display: none;
 }
+
+.profile-dropdown {
+    /* border: 2px solid black; */
+    
+}
+
+.dropdown-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.dropdown-button:hover {
+    text-decoration: underline;
+}
