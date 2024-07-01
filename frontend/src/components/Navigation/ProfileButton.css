@@ -10,6 +10,18 @@
 
 }
 
+.profile-container {
+    border: 1px solid black;
+    border-radius: 3px;
+    margin-right: 100px;
+    width: 5rem;
+    /* left: 50%; */
+    right: 50px;
+    /* margin-right: 30px; */
+    position: absolute;
+    background-color: white;
+}
+
 .profile-dropdown {
     /* border: 2px solid black; */
     

@@ -45,7 +45,7 @@ function ProfileButton({ user }) {
         <IoIosMenu />
         <FaUserCircle />
       </button>
-      <ul className={ulClassName} ref={ulRef}>
+      <div className={ulClassName} ref={ulRef}>
         {user ? (
           <>
             <div>{user.username}</div>
@@ -56,7 +56,7 @@ function ProfileButton({ user }) {
             </div>
           </>
         ) : (
-          <>
+          <div className='profile-container'>
             <div className='profile-dropdown'>
               <OpenModalButton
                 buttonText="Log In"
@@ -72,9 +72,9 @@ function ProfileButton({ user }) {
                 className='dropdown-button'
               />
             </div>
-          </>
+          </div>
         )}
-      </ul>
+      </div>
     </>
   );
 }
