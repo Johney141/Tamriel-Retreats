@@ -1,14 +1,19 @@
 .navbar {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
+    padding-bottom: 2rem;
+    padding-top: 1rem;
+    border-bottom: 1px solid #EBEBEB;
 }
 
 #home-button {
     cursor: pointer;
-    font-size: large;
+    font-size: 25px;
     font-weight: bold;
     color: #FF385C;
     border: none;
     background: none;
+    display: flex;
+    align-items: center;
 }

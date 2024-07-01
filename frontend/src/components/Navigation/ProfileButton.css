@@ -1,6 +1,14 @@
 .hidden {
     display: none;
 }
+.dropdown-menu {
+    background: none;
+    border-radius: 25px;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+
+}
 
 .profile-dropdown {
     /* border: 2px solid black; */

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { FaUserCircle } from 'react-icons/fa';
+import { IoIosMenu } from "react-icons/io";
 import * as sessionActions from '../../store/session';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
@@ -40,7 +41,8 @@ function ProfileButton({ user }) {
 
   return (
     <>
-      <button onClick={toggleMenu}>
+      <button onClick={toggleMenu} className='dropdown-menu'>
+        <IoIosMenu />
         <FaUserCircle />
       </button>
       <ul className={ulClassName} ref={ulRef}>
@@ -59,6 +61,7 @@ function ProfileButton({ user }) {
               <OpenModalButton
                 buttonText="Log In"
                 modalComponent={<LoginFormModal />}
+                className='dropdown-button'
                 
               />
             </div>
