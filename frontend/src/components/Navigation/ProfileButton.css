@@ -1,0 +1,38 @@
+.hidden {
+    display: none;
+}
+.dropdown-menu {
+    background: none;
+    border-radius: 25px;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+
+}
+
+.profile-container {
+    border: 1px solid black;
+    border-radius: 3px;
+    margin-right: 100px;
+    width: 5rem;
+    /* left: 50%; */
+    right: 50px;
+    /* margin-right: 30px; */
+    position: absolute;
+    background-color: white;
+}
+
+.profile-dropdown {
+    /* border: 2px solid black; */
+    
+}
+
+.dropdown-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.dropdown-button:hover {
+    text-decoration: underline;
+}

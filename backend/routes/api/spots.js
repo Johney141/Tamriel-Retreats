@@ -55,15 +55,21 @@ const validateQuerys = [
 router.get('/',validateQuerys , async (req, res, next) => {
     try {
         let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
-
+        let response = {};
 
 
         if(size) {
             size = parseInt(size);
+            response.size = size;
         }
         if(page){
             page = parseInt(page);
-            page = (page - 1) * size;
+            if(!size) {
+                page = 1;
+            
+            } else {
+                page = (page - 1) * size;
+            }
         }
         const where = {};
         if(minLat) {
@@ -129,9 +135,13 @@ router.get('/',validateQuerys , async (req, res, next) => {
         }
         
         let updatedSpots = await fullSpots(spots)
+        response.Spots = updatedSpots;
+        
            
         res.json({
-            Spots: updatedSpots
+            Spots: updatedSpots,
+            page,
+            size
         })
     } catch (error) {
         next(error)
@@ -279,7 +289,7 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
             lng: newSpot.lng,
             name: newSpot.name,
             description: newSpot.description,
-            price: 123,
+            price: newSpot.price,
             createdAt: newSpot.createdAt,
             updatedAt: newSpot.updatedAt
         }
@@ -347,9 +357,18 @@ router.get('/:spotId/bookings', requireAuth, async(req, res, next) => {
                 },
                 attributes: ['spotId', 'startDate', 'endDate']
             })
+            let updatedBookings = []
+            for(let booking of bookings){
+                let updatedBooking = {
+                    spotId: booking.spotId,
+                    startDate: booking.startDate.toISOString().slice(0, 10),
+                    endDate: booking.endDate.toISOString().slice(0, 10),
+                }
+                updatedBookings.push(updatedBooking)
+            }
 
             return res.json({
-                Bookings: bookings
+                Bookings: updatedBookings
             })
         // If user is the owner
         } else {
@@ -483,6 +502,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
         startDate = new Date(startDate);
         endDate = new Date(endDate);
+        let currentDate = new Date();
         const overlaps = checkOverlap(startDate, endDate, currentBookings)
 
         if(overlaps.hasOverlap) {
@@ -500,6 +520,12 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
             return next(overlapError);
         }
+        
+        if(startDate <= currentDate) {
+            const pastBooking = new Error('Cannot have booking in the past');
+            pastBooking.status = 400;
+            return next(pastBooking)
+        }
 
         const newBooking = await Booking.create({
             spotId,
@@ -508,8 +534,17 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
             endDate
         })
 
+        const response = {
+            id: newBooking.id,
+            spotId: newBooking.spotId,
+            userId: newBooking.userId,
+            startDate: newBooking.startDate.toISOString().slice(0, 10),
+            endDate: newBooking.endDate.toISOString().slice(0, 10),
+            createdAt: newBooking.createdAt,
+            updatedAt: newBooking.updatedAt
+        }
         
-        return res.status(201).json(newBooking)
+        return res.status(201).json(response)
     } catch (error) {
         next(error);
     }
