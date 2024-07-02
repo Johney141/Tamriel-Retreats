@@ -1,11 +1,12 @@
-import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaAirbnb } from 'react-icons/fa';
 import ProfileButton from './ProfileButton';
 import './Navigation.css';
+import { useNavigate } from 'react-router-dom';
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
+  const navigate = useNavigate();
 
   const handleClick = () => {
     navigate('/')

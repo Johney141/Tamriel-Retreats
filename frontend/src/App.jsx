@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
-import LoginFormPage from './components/LoginFormModal/LoginFormModal';
 import * as sessionActions from './store/session';
-import SignupFormPage from './components/SignupFormModal/SignupFormModal';
 import Navigation from './components/Navigation/Navigation';
 
 function Layout() {

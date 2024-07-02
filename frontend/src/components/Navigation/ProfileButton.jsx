@@ -31,6 +31,8 @@ function ProfileButton({ user }) {
 
     return () => document.removeEventListener("click", closeMenu);
   }, [showMenu]);
+  
+  const closeMenu = () => setShowMenu(false);
 
   const logout = (e) => {
     e.preventDefault();
@@ -60,6 +62,7 @@ function ProfileButton({ user }) {
             <div className='profile-dropdown'>
               <OpenModalButton
                 buttonText="Log In"
+                onButtonClick={closeMenu}
                 modalComponent={<LoginFormModal />}
                 className='dropdown-button'
                 
@@ -68,6 +71,7 @@ function ProfileButton({ user }) {
             <div className='profile-dropdown'>
               <OpenModalButton
                 buttonText="Sign Up"
+                onButtonClick={closeMenu}
                 modalComponent={<SignupFormModal />}
                 className='dropdown-button'
               />
