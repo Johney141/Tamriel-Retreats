@@ -31,7 +31,7 @@ function ProfileButton({ user }) {
 
     return () => document.removeEventListener("click", closeMenu);
   }, [showMenu]);
-  
+
   const closeMenu = () => setShowMenu(false);
 
   const logout = (e) => {
@@ -42,7 +42,7 @@ function ProfileButton({ user }) {
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
-    <>
+    <div className='profile'>
       <button onClick={toggleMenu} className='dropdown-menu'>
         <IoIosMenu />
         <FaUserCircle />
@@ -79,7 +79,7 @@ function ProfileButton({ user }) {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 

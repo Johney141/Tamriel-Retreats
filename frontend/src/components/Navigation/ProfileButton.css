@@ -7,16 +7,17 @@
     font-size: 2rem;
     display: flex;
     align-items: center;
+    right: 1em;
 
 }
 
 .profile-container {
     border: 1px solid black;
     border-radius: 3px;
-    margin-right: 100px;
-    width: 5rem;
+    /* margin-right: 100px; */
+    width: 10rem;
     /* left: 50%; */
-    right: 50px;
+    right: 10px;
     /* margin-right: 30px; */
     position: absolute;
     background-color: white;
@@ -36,3 +37,7 @@
 .dropdown-button:hover {
     text-decoration: underline;
 }
+
+/* .profile {
+    
+} */
