@@ -31,6 +31,10 @@ const router = createBrowserRouter([
         path: '/',
         element: <LandingPage />
       },
+      {
+        path: ':spotId',
+        element: <h1>placeholder</h1>
+      }
     ]
   }
 ]);

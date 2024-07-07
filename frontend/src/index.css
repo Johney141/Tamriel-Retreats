@@ -1,1 +1,6 @@
 /* TODO: Add sitewide styles */
+
+body {
+    font-family: 'Monteserrat', sans-serif;
+    font-weight: 500;
+}
