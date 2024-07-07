@@ -15,32 +15,32 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     SpotImage.bulkCreate([
       {
-        url: 'https://tamriel-retreats.onrender.com/images/The_Bannered_Mare_preview.jpg',
+        url: 'https://tamrielretreats.s3.us-east-2.amazonaws.com/The_Bannered_Mare_preview.jpg',
         spotId: '1',
         isPreview: true
       },
       {
-        url: 'https://tamriel-retreats.onrender.com/images/The_Bee_and_Barb_preview.jpg',
+        url: 'https://tamrielretreats.s3.us-east-2.amazonaws.com/The_Bee_and_Barb_preview.jpg',
         spotId: '2',
         isPreview: true
       },
       {
-        url: 'https://tamriel-retreats.onrender.com/images/The_Ragged_Flagon_preview.jpg',
+        url: 'https://tamrielretreats.s3.us-east-2.amazonaws.com/TESV_Ragged_Flagon.webp',
         spotId: '3',
         isPreview: true
       },
       {
-        url: 'https://tamriel-retreats.onrender.com/images/The_Bannered_Mare.jpg',
+        url: 'https://tamrielretreats.s3.us-east-2.amazonaws.com/The_Bannered_Mare.jpg',
         spotId: '1',
         isPreview: false
       },
       {
-        url: 'https://tamriel-retreats.onrender.com/images/The_Bee_and_Barb.jpg',
+        url: 'https://tamrielretreats.s3.us-east-2.amazonaws.com/The_Bee_and_Barb.jpg',
         spotId: '2',
         isPreview: false
       },
       {
-        url: 'https://tamriel-retreats.onrender.com/images/Ragged_Flagon.jpg',
+        url: 'https://tamrielretreats.s3.us-east-2.amazonaws.com/Ragged_Flagon.jpg',
         spotId: '3',
         isPreview: false
       }
@@ -51,12 +51,12 @@ module.exports = {
     options.tableName = 'SpotImages';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      url: { [Op.in]: ['https://tamriel-retreats.onrender.com/images/The_Bannered_Mare_preview.jpg',
-                       'https://tamriel-retreats.onrender.com/images/The_Bee_and_Barb_preview.jpg',
-                       'https://tamriel-retreats.onrender.com/images/The_Ragged_Flagon_preview.jpg',
-                       'https://tamriel-retreats.onrender.com/images/The_Bannered_Mare.jpg',
-                       'https://tamriel-retreats.onrender.com/images/The_Bee_and_Barb.jpg',
-                       'https://tamriel-retreats.onrender.com/images/Ragged_Flagon.jpg',
+      url: { [Op.in]: ['https://tamrielretreats.s3.us-east-2.amazonaws.com/The_Bannered_Mare_preview.jpg',
+                       'https://tamrielretreats.s3.us-east-2.amazonaws.com/The_Bee_and_Barb_preview.jpg',
+                       'https://tamrielretreats.s3.us-east-2.amazonaws.com/The_Ragged_Flagon_preview.jpg',
+                       'https://tamrielretreats.s3.us-east-2.amazonaws.com/The_Bannered_Mare.jpg',
+                       'https://tamrielretreats.s3.us-east-2.amazonaws.com/The_Bee_and_Barb.jpg',
+                       'https://tamrielretreats.s3.us-east-2.amazonaws.com/Ragged_Flagon.jpg',
                       ] }
     }, {});
   }
