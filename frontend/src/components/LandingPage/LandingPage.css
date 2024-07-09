@@ -50,6 +50,7 @@ img {
     align-items: center;
 }
 .spot-container {
+    border: solid 1px black;
     border-radius: 10px;
     
 }

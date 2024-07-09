@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { fetchSpots } from "../../store/spots";
 import { CiStar } from "react-icons/ci";
 import Lottie from 'react-lottie';
-import animationData from '../../../public/loading.json';
+import animationData from '../../loading.json';
 
 import './LandingPage.css'
 import { useNavigate } from "react-router-dom";
@@ -35,16 +35,16 @@ const LandingPage = () => {
         if(!isLoaded) {
             getSpots();
         }
-    }, [isLoaded])
+    }, [isLoaded, dispatch])
 
 
     if(!isLoaded) {
         return(
-        <Lottie 
-	    options={defaultOptions}
-        height={400}
-        width={400}
-      />)
+            <Lottie 
+            options={defaultOptions}
+            height={400}
+            width={400}
+        />)
     }
 
     return(
