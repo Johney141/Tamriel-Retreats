@@ -43,6 +43,21 @@ module.exports = {
         url: 'https://tamrielretreats.s3.us-east-2.amazonaws.com/Ragged_Flagon.jpg',
         spotId: '3',
         isPreview: false
+      }, 
+      {
+        url: 'https://tamrielretreats.s3.us-east-2.amazonaws.com/Bannered_Mare_Shop_Sign.webp',
+        spotId: '1',
+        isPreview: false
+      },
+      {
+        url: 'https://tamrielretreats.s3.us-east-2.amazonaws.com/The_Bannered_Mare_Inside.webp',
+        spotId: '1',
+        isPreview: false
+      },
+      {
+        url: 'https://tamrielretreats.s3.us-east-2.amazonaws.com/The_Bannered_Mare_outside.webp',
+        spotId: '1',
+        isPreview: false
       }
     ], {validate: true});
   },

@@ -53,7 +53,7 @@ const LandingPage = () => {
             {spots.map(spot => (
                 
                 <div key={spot.id} className="spot-container" onClick={() => navigate(`${spot.id}`)}>
-                    <img src={spot.previewImage} alt={spot.name} />
+                    <img src={spot.previewImage} alt={spot.name} className="card-image"/>
                     <div className="card-title">
                         <p>{spot.city}, {spot.state}</p>
                         <div className="star-rating">

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchSpot } from "../../store/spots";
 import SpotDetailImages from "./SpotDetailImages/SpotDetailImages";
+import './SpotDetails.css';
 
 
 const SpotDetails = () => {
@@ -32,7 +33,7 @@ const SpotDetails = () => {
         )
     } else {
         return (
-            <>
+            <div className="detail-container">  
                 <header>
                     <h1>{spot.name}</h1>
                     <h4>{`${spot.city}, ${spot.state}, ${spot.country}`}</h4>
@@ -42,7 +43,7 @@ const SpotDetails = () => {
                     <h2>Hosted by {`${spot.Owner.firstName} ${spot.Owner.lastName}`}</h2>
                     <p>{spot.description}</p>
                 </main>
-            </>
+            </div>
         )
     }
     
