@@ -61,6 +61,14 @@ const SpotDetails = () => {
                         <button id="bookingButton" onClick={handleBooking}>Reserve</button>
                     </div>
                 </main>
+                <footer className="reviews">
+                                                
+                <div className="review-header">
+                        <CiStar /> 
+                        <h3 id="avgRating">{spot.avgStarRating} </h3>
+                        <h3>| {spot.numReviews === 1 ? `1 review`: `${spot.numReviews} reviews`}</h3>
+                    </div>
+                </footer>
             </div>
         )
     }

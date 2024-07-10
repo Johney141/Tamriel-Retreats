@@ -5,7 +5,8 @@
     
 }
 .booking-container {
-    border: 2px solid black;
+    border: 1px solid lightgrey;
+    box-shadow: 0 0 3px 0  #0000001a;
     border-radius: 20px;
     width: 40%;
     padding: 1rem;
@@ -26,11 +27,19 @@
     width: 100%;
     margin-bottom: 20px; 
 }
+.spot-information {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid lightgray;
+}
 
 .description {
     width: 55%;
 }
 
+.review-header {
+    display: flex;
+    align-items: center;
+}
 #bookingButton {
     background-color: #FF385C;;
     padding: 1rem;
