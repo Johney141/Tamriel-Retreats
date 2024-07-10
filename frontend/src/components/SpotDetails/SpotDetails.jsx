@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchSpot } from "../../store/spots";
 import SpotDetailImages from "./SpotDetailImages/SpotDetailImages";
+import { CiStar } from "react-icons/ci";
 import './SpotDetails.css';
 
 
@@ -25,6 +26,10 @@ const SpotDetails = () => {
         }
         
     }, [isLoaded, dispatch, spotId])
+
+    const handleBooking = () => {
+        window.alert('Feature Coming Soon')
+    }
     
     console.log(spot)
     if(!isLoaded){
@@ -36,12 +41,25 @@ const SpotDetails = () => {
             <div className="detail-container">  
                 <header>
                     <h1>{spot.name}</h1>
-                    <h4>{`${spot.city}, ${spot.state}, ${spot.country}`}</h4>
+                    <h4 id="spotLocation">{`${spot.city}, ${spot.state}, ${spot.country}`}</h4>
                 </header>
                 <SpotDetailImages images={spot.SpotImages} />
-                <main>
-                    <h2>Hosted by {`${spot.Owner.firstName} ${spot.Owner.lastName}`}</h2>
-                    <p>{spot.description}</p>
+                <main className="spot-information">
+                    <div className="description">
+                        <h3 id="hostedBy">Hosted by {`${spot.Owner.firstName} ${spot.Owner.lastName}`}</h3>
+                        <p id="spotDescription">{spot.description}</p>
+                    </div>
+                    <div className="booking-container">
+                        <div className="booking-info">
+                            <p><b>${spot.price}</b> night</p>
+                            <div className="booking-ratings">
+                                <CiStar /> 
+                                <p id="avgRating">{spot.avgStarRating} </p>
+                                <p>| {spot.numReviews === 1 ? `1 review`: `${spot.numReviews} reviews`}</p>
+                            </div>
+                        </div>
+                        <button id="bookingButton" onClick={handleBooking}>Reserve</button>
+                    </div>
                 </main>
             </div>
         )
