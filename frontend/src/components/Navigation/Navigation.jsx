@@ -11,10 +11,10 @@ function Navigation({ isLoaded }) {
   const handleHomeClick = () => {
     navigate('/')
   }
-  const handleCreateSpot = () => {
+
+  const handleCreateClick = () => {
     navigate('/spots/create-a-spot')
   }
-
   return (
     <nav className='navbar'>
       <div className='nav-item'>
@@ -27,16 +27,15 @@ function Navigation({ isLoaded }) {
       </button>
       </div>
       {isLoaded && (
-        <div className='spot-profile-container'>
+        <div>
           {sessionUser ? (
             <button 
               id='createSpotButton'
-              onClick={handleCreateSpot}
+              onClick={handleCreateClick}
               >
               Create a New Spot
             </button>
           ) : null}
-
           <ProfileButton user={sessionUser} />
         </div>
       )}
