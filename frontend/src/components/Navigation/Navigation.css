@@ -20,3 +20,16 @@
     align-items: center;
     
 }
+.spot-profile-container {
+    display: flex;
+}
+
+#createSpotButton {
+    border: none;
+    color: blue;
+    cursor: pointer;
+}
+
+#createSpotButton:hover {
+    color: darkgrey;
+}

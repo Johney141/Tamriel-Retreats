@@ -11,20 +11,29 @@
 
 }
 
+.user-container,
 .profile-container {
-    border: 1px solid black;
+    box-shadow: 0 0 3px grey;
     border-radius: 3px;
-    /* margin-right: 100px; */
     width: 10rem;
-    /* left: 50%; */
     right: 10px;
-    /* margin-right: 30px; */
     position: absolute;
     background-color: white;
 }
 
+.user-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-    
+.user-info {
+    font-size: .95rem;
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 1rem;
+}   
+
+
 
 
 .dropdown-button {
@@ -37,6 +46,15 @@
     text-decoration: underline;
 }
 
-/* .profile {
-    
-} */
+#logoutButton {
+    cursor: pointer;
+    border-radius: 25px;
+    padding: .5rem;
+    margin-bottom: 1rem;
+    background-color: #FF385C;
+    color: white;
+}
+
+#logoutButton:hover {
+    background-color: darkgrey;
+}
