@@ -58,3 +58,8 @@
 #avgRating {
     margin-right: .5rem;
 }
+
+#spotTitle {
+    font-size: 26px;
+    font-weight: 550;
+}

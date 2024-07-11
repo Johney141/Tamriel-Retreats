@@ -39,8 +39,8 @@ const SpotDetails = () => {
     } else {
         return (
             <div className="detail-container">  
-                <header>
-                    <h1>{spot.name}</h1>
+                <header className="spot-detail-header">
+                    <h1 id="spotTitle">{spot.name}</h1>
                     <h4 id="spotLocation">{`${spot.city}, ${spot.state}, ${spot.country}`}</h4>
                 </header>
                 <SpotDetailImages images={spot.SpotImages} />
