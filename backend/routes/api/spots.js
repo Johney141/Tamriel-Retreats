@@ -293,7 +293,7 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
             createdAt: newSpot.createdAt,
             updatedAt: newSpot.updatedAt
         }
-        
+        console.log(responseSpot)
         return res.status(201).json(responseSpot);
 
     } catch (error) {

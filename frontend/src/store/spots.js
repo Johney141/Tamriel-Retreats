@@ -20,7 +20,7 @@ const getSpot = (spot) => {
     }
 }
 
-const addSPot = (spot) => {
+const addSpot = (spot) => {
     return {
         type: ADD_SPOT,
         payload: spot
@@ -75,7 +75,7 @@ export const addSpotThunk = (spotBody) => async (dispatch) => {
             dispatch(addSpot(spot))
             return null
         } else {
-            console.log(res);
+            
             throw res
         }
     } catch (error) {
