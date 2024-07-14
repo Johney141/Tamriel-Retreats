@@ -73,13 +73,14 @@ export const addSpotThunk = (spotBody) => async (dispatch) => {
         if(res.ok) {
             const spot = await res.json();
             dispatch(addSpot(spot))
-            return null
+            return spot;
         } else {
-            
-            throw res
+            const err = await res.json();
+            throw err;
         }
     } catch (error) {
-        return error 
+        const err = await error.json();
+        return err 
     }
 }
 

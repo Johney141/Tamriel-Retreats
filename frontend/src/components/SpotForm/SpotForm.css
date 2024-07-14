@@ -25,3 +25,11 @@
     resize: vertical;
 }
 
+.error {
+    color: red
+}
+
+.label-container {
+    display: flex;
+    align-items: center;
+}

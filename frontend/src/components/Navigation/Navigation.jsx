@@ -27,7 +27,7 @@ function Navigation({ isLoaded }) {
       </button>
       </div>
       {isLoaded && (
-        <div>
+        <div className='create-profile-container'>
           {sessionUser ? (
             <button 
               id='createSpotButton'
