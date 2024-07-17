@@ -37,6 +37,7 @@ const UserSpots = () => {
     }
 
 
+
     return (
         <>
         <div>
@@ -67,7 +68,7 @@ const UserSpots = () => {
                     <p className="pricing"><b>${spot.price}</b>/night</p>
                     </div>
                     <div>
-                        <button>Update</button>
+                        <button onClick={() => navigate(`/spots/${spot.id}/edit`)}>Update</button>
                         <OpenModalButton                 
                             buttonText="Delete"
                             modalComponent={<DeleteSpotModal spotId={spot.id} spotDeleted={handleSpotDeleted}/>}/>
