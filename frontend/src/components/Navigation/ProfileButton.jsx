@@ -7,14 +7,16 @@ import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
 import SignupFormModal from '../SignupFormModal/SignupFormModal';
 import './ProfileButton.css'
+import { useNavigate } from 'react-router-dom';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
+  const navigate = useNavigate();
 
   const toggleMenu = (e) => {
-    e.stopPropagation(); // Keep from bubbling up to document and triggering closeMenu
+    e.stopPropagation(); 
     setShowMenu(!showMenu);
   };
 
@@ -39,6 +41,11 @@ function ProfileButton({ user }) {
     dispatch(sessionActions.logout());
   };
 
+  const handleMangeSpots = (e) => {
+    e.preventDefault();
+    navigate('/spots/current')
+  }
+
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
@@ -53,6 +60,14 @@ function ProfileButton({ user }) {
             <div className='user-info'>
               <p>Hello, {user.username}</p>
               <p>{user.email}</p>
+            </div>
+            <div>
+              <button
+                onClick={handleMangeSpots}
+                id='manageSpots'
+              >
+                Manage Spots
+              </button>
             </div>
             <div>
               <button 

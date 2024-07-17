@@ -10,7 +10,6 @@ import './SpotDetails.css';
 const SpotDetails = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const { spotId } = useParams();
-    // const [ spot, setSpot ] = useState()
     const spot = useSelector(state => state.spotState.byId[spotId])
 
     const dispatch = useDispatch();
@@ -53,9 +52,17 @@ const SpotDetails = () => {
                         <div className="booking-info">
                             <p><b>${spot.price}</b> night</p>
                             <div className="booking-ratings">
-                                <CiStar /> 
-                                <p id="avgRating">{spot.avgStarRating} </p>
-                                <p>| {spot.numReviews === 1 ? `1 review`: `${spot.numReviews} reviews`}</p>
+                                {spot.numReviews === null ? 
+                                    <>
+                                        <CiStar />
+                                        <h3>New</h3>
+                                    </>
+                                : 
+                                    <>
+                                        <CiStar /> 
+                                        <h3 id="avgRating">{spot.avgStarRating} </h3>
+                                        <h3>| {spot.numReviews === 1 ? `1 review`: `${spot.numReviews} reviews`}</h3>
+                                    </>}
                             </div>
                         </div>
                         <button id="bookingButton" onClick={handleBooking}>Reserve</button>
@@ -64,9 +71,17 @@ const SpotDetails = () => {
                 <footer className="reviews">
                                                 
                 <div className="review-header">
-                        <CiStar /> 
-                        <h3 id="avgRating">{spot.avgStarRating} </h3>
-                        <h3>| {spot.numReviews === 1 ? `1 review`: `${spot.numReviews} reviews`}</h3>
+                    {spot.numReviews === null ? 
+                        <>
+                            <CiStar />
+                            <h3>New</h3>
+                        </>
+                    : 
+                        <>
+                            <CiStar /> 
+                            <h3 id="avgRating">{spot.avgStarRating} </h3>
+                            <h3>| {spot.numReviews === 1 ? `1 review`: `${spot.numReviews} reviews`}</h3>
+                        </>}
                     </div>
                 </footer>
             </div>

@@ -1,58 +1,43 @@
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux"
-import { fetchSpots } from "../../store/spots";
+import { fetchUserSpots } from "../../store/spots"; 
 import { CiStar } from "react-icons/ci";
-import Lottie from 'react-lottie';
-import animationData from '../../loading.json';
-
-import './LandingPage.css'
 import { useNavigate } from "react-router-dom";
+import OpenModalButton from "../OpenModalButton/OpenModalButton";
+import DeleteSpotModal from "../DeleteSpotModal/DeleteSpotModal";
 
-
-const LandingPage = () => {
+const UserSpots = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const spots = useSelector(state => state.spotState.allSpots);
     const orderedSpots = spots.toReversed();
     const navigate = useNavigate();
-    const defaultOptions = {
-        loop: true,
-        autoplay: true,
-        animationData: animationData,
-        rendererSettings: {
-          preserveAspectRatio: "xMidYMid slice"
-        }
-    };
-    
 
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const getSpots = async () => {
-            await dispatch(fetchSpots())
+        const getUserSpots = async () => {
+            await dispatch(fetchUserSpots())
             setIsLoaded(true);
         }
 
         if(!isLoaded) {
-            getSpots();
+            getUserSpots();
         }
     }, [isLoaded, dispatch])
 
 
-    if(!isLoaded) {
-        return(
-            <Lottie 
-            options={defaultOptions}
-            height={400}
-            width={400}
-        />)
-    }
-
-    return(
+    return (
         <>
+        <div>
+            <h1>Manage Your Spots</h1>
+            <button
+            onClick={() => navigate('/spots/create-a-spot')}
+            >Create a New Spot</button>
+        </div>
         <div className="landing-container">
+            
             {orderedSpots.map(spot => (
-                
                 <div 
                     key={spot.id} 
                     className="spot-container" 
@@ -67,12 +52,19 @@ const LandingPage = () => {
                         </div>
                     </div>
                     <p className="pricing"><b>${spot.price}</b>/night</p>
-                </div>
+                    <div>
+                        <button>Update</button>
+                        <OpenModalButton                 
+                            buttonText="Delete"
+                            modalComponent={<DeleteSpotModal />}/>
+                    </div>
+            </div>
             ))}
-            
+
         </div>
         </>
     )
+    
 }
 
-export default LandingPage
+export default UserSpots

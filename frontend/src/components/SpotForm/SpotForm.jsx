@@ -3,14 +3,13 @@ import './SpotForm.css'
 import { useDispatch } from 'react-redux';
 import { addSpotThunk } from '../../store/spots';
 import { addSpotImageThunk } from '../../store/spot-images';
+import { useNavigate } from 'react-router-dom';
 
 const SpotForm = () => {
     const [country, setCountry] = useState('');
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
-    const [lat, setLat] = useState();
-    const [lng, setLng] = useState();
     const [description, setDescription] = useState('');
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
@@ -22,10 +21,11 @@ const SpotForm = () => {
     const [spotValidationErrors, setSpotValidationErrors] = useState({});
     const [imgValidationErrors, setImgValidationErrors] = useState({});
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
 
     
-    console.log(country, address, city, state, lat, lng, description, name, price, preview, photo1,photo2,photo3,photo4)
+    console.log(country, address, city, state, description, name, price, preview, photo1,photo2,photo3,photo4)
 
     
 
@@ -61,7 +61,7 @@ const SpotForm = () => {
             {url: photo3, isPreview: false, photo: 'photo3'},
             {url: photo4, isPreview: false, photo: 'photo4'},
         ];
-        let imgData
+
         for (let image of images) {
             if(image.isPreview && !image.url) {
                 setImgValidationErrors({...imgValidationErrors, preview: "Preview image is required"})
@@ -71,10 +71,13 @@ const SpotForm = () => {
                 continue;
             }
             else {
-                imgData = await dispatch(addSpotImageThunk(image, spotId))
+                await dispatch(addSpotImageThunk(image, spotId))
             }
         }
 
+        if(!Object.keys(spotValidationErrors).length && !Object.keys(imgValidationErrors).length) {
+            navigate(`/spots/${spotId}`)
+        }
         
     }
     
