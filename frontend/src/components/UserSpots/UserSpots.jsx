@@ -9,6 +9,7 @@ import DeleteSpotModal from "../DeleteSpotModal/DeleteSpotModal";
 const UserSpots = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const spots = useSelector(state => state.spotState.allSpots);
+    const [spotDeleted, setSpotDeleted] = useState(false);
     const orderedSpots = spots.toReversed();
     const navigate = useNavigate();
 
@@ -24,7 +25,16 @@ const UserSpots = () => {
         if(!isLoaded) {
             getUserSpots();
         }
-    }, [isLoaded, dispatch])
+
+        if(spotDeleted) {
+            getUserSpots();
+            setSpotDeleted(false);
+        }
+    }, [isLoaded, spotDeleted, dispatch])
+
+    const handleSpotDeleted = () => {
+        setSpotDeleted(true);
+    }
 
 
     return (
@@ -41,8 +51,11 @@ const UserSpots = () => {
                 <div 
                     key={spot.id} 
                     className="spot-container" 
-                    onClick={() => navigate(`/spots/${spot.id}`)}
+                    
                     >
+                    <div onClick={() => navigate(`/spots/${spot.id}`)}>
+                    
+                    
                     <img src={spot.previewImage} alt={spot.name} className="card-image"/>
                     <div className="card-title">
                         <p>{spot.city}, {spot.state}</p>
@@ -52,11 +65,12 @@ const UserSpots = () => {
                         </div>
                     </div>
                     <p className="pricing"><b>${spot.price}</b>/night</p>
+                    </div>
                     <div>
                         <button>Update</button>
                         <OpenModalButton                 
                             buttonText="Delete"
-                            modalComponent={<DeleteSpotModal />}/>
+                            modalComponent={<DeleteSpotModal spotId={spot.id} spotDeleted={handleSpotDeleted}/>}/>
                     </div>
             </div>
             ))}

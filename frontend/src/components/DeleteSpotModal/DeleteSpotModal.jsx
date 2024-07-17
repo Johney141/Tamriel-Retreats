@@ -1,13 +1,25 @@
 import { useEffect } from "react";
 import './DeleteSpot.css'
+import { useModal } from "../../context/Modal";
+import { useDispatch } from "react-redux";
+import { deleteSpotThunk } from "../../store/spots";
 
 
-const DeleteSpotModal = () => {
-    const
+
+const DeleteSpotModal = ({spotId, spotDeleted}) => {
+    const { closeModal } = useModal();
+    const dispatch = useDispatch();
+
 
     const handleDelete = (e) => {
-        e.preventDefault;
-        e.stopPropagation;
+        e.preventDefault();
+        e.stopPropagation();
+
+        dispatch(deleteSpotThunk(spotId))
+            .then(() => {
+                spotDeleted();
+                closeModal();
+            })
 
     }
 
@@ -15,8 +27,13 @@ const DeleteSpotModal = () => {
         <div className="delete-spot-container">
             <h1>Confirm Delete</h1>
             <p>Are you sure you want to remove this spot from the listings?</p>
-            <button className="delete-button">Yes (Delete Spot)</button>
-            <button className="keep-button">No (Keep Spot)</button>
+            <button 
+                className="delete-button"
+                onClick={(e) => handleDelete(e)}>Yes (Delete Spot)</button>
+            <button 
+                className="keep-button"
+                onClick={closeModal}
+            >No (Keep Spot)</button>
         </div>
     )
 }
