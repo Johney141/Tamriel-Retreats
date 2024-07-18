@@ -67,6 +67,8 @@ const UpdateSpot = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+    
+
         const spotBody = {
             address,
             city,
@@ -77,46 +79,58 @@ const UpdateSpot = () => {
             name,
             description,
             price
-        }
-        setSpotValidationErrors({})
-        setImgValidationErrors({})
-        console.log("Errors Cleard: ", spotValidationErrors, imgValidationErrors )
-        const spotData =  await dispatch(updateSpotThunk(spotBody, spotId))
-        // const parsedSpotData = await spotData.json();
-        // console.log(spotData)
-
-        if(spotData.errors) {
-            setSpotValidationErrors({...spotData.errors})
-        } 
-        const images = [
-            {url: preview, isPreview: true, photo: 'preview', imgId: spot.SpotImages[0]?.id || null},
-            {url: photo1, isPreview: false, photo: 'photo1', imgId: spot.SpotImages[1]?.id || null},
-            {url: photo2, isPreview: false, photo: 'photo2', imgId: spot.SpotImages[2]?.id || null},
-            {url: photo3, isPreview: false, photo: 'photo3', imgId: spot.SpotImages[3]?.id || null},
-            {url: photo4, isPreview: false, photo: 'photo4', imgId: spot.SpotImages[4]?.id || null},
-        ];
-
-        for (let image of images) {
-            if(image.isPreview && !image.url) {
-                setImgValidationErrors({...imgValidationErrors, preview: "Preview image is required"})
-            } else if(image.url.length > 1 && !(image.url.endsWith('.png') || image.url.endsWith('.jpg') || image.url.endsWith('.jpeg'))) {
-                setImgValidationErrors({...imgValidationErrors, [image.photo]: "Image URL must end in .png, .jpg, or .jpeg"})
-            } else if (!image.url) {
-                continue;
-            }
-            else {
-                if(image.imgId){
-                    await dispatch(deleteSpotImageThunk(image.imgId))
-                }
-                await dispatch(addSpotImageThunk(image, spotId))
-            }
-        }
-
-        if(!Object.keys(spotValidationErrors).length && !Object.keys(imgValidationErrors).length) {
-            navigate(`/spots/${spotId}`)
-        }
+        };
+        console.log(spotBody)
+    
+        setSpotValidationErrors({});
+        setImgValidationErrors({});
+        console.log("Errors Cleared: ", spotValidationErrors, imgValidationErrors);
+    
+      
+        const spotData = await dispatch(updateSpotThunk(spotBody, spotId));
         
-    }
+        console.log('Response: ',spotData)
+        
+        let spotErrors = {}
+        if(spotData.errors) {
+            spotErrors = {...spotData.errors}
+            setSpotValidationErrors({...spotData.errors})
+        }
+    
+ 
+        const images = [
+            { url: preview, isPreview: true, photo: 'preview', imgId: spot?.SpotImages[0]?.id || null },
+            { url: photo1, isPreview: false, photo: 'photo1', imgId: spot?.SpotImages[1]?.id || null },
+            { url: photo2, isPreview: false, photo: 'photo2', imgId: spot?.SpotImages[2]?.id || null },
+            { url: photo3, isPreview: false, photo: 'photo3', imgId: spot?.SpotImages[3]?.id || null },
+            { url: photo4, isPreview: false, photo: 'photo4', imgId: spot?.SpotImages[4]?.id || null },
+        ];
+    
+      
+        const imageErrors = {};
+        for (let image of images) {
+            if (image.isPreview && !image.url) {
+                imageErrors.preview = "Preview image is required";
+            } else if (image.url.length && !(image.url.endsWith('.png') || image.url.endsWith('.jpg') || image.url.endsWith('.jpeg'))) {
+                imageErrors[image.photo] = "Image URL must end in .png, .jpg, or .jpeg";
+            } else if (image.url && image.imgId) {
+                await dispatch(deleteSpotImageThunk(image.imgId));
+                await dispatch(addSpotImageThunk(image, spotId));
+            } else if (image.url) {
+                await dispatch(addSpotImageThunk(image, spotId));
+            }
+        }
+    
+       
+        if (Object.keys(imageErrors).length) {
+            setImgValidationErrors(imageErrors);
+        }
+    
+      
+        if (!Object.keys(spotErrors).length && !Object.keys(imageErrors).length) {
+            navigate(`/spots/${spotId}`);
+        }
+    };
     
     // console.log(spotValidationErrors)
     return (

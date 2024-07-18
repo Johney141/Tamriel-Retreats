@@ -48,9 +48,14 @@ export const deleteSpotImageThunk = (imageId) => async (dispatch) => {
         }
         const res = await csrfFetch(`/api/spot-images/${imageId}`, options)
 
+        
+
         if(res.ok) {
             const data = await res.json();
+            console.log('image deleted')
             dispatch(deleteSpotImage(data));
+        } else {
+            throw res
         }
     } catch (error) {
         return error

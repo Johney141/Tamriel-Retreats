@@ -243,9 +243,8 @@ const validateSpot = [
         .withMessage('Longitude is not valid'),
     check('name')
         .exists({checkFalsy: true})
-        .isString()
-        .isLength({max: 50})
-        .withMessage("Name must be less than 50 characters"),
+        .withMessage('Name is required'),
+
     check('description')
         .exists({checkFalsy: true})
         .withMessage("Description is required"),

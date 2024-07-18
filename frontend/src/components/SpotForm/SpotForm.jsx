@@ -49,11 +49,15 @@ const SpotForm = () => {
         // const parsedSpotData = await spotData.json();
         console.log(spotData)
         let spotId
+        let spotErrors = {}
         if(spotData.errors) {
+            spotErrors = {...spotData.errors}
             setSpotValidationErrors({...spotData.errors})
         } else {
             spotId = spotData.id;
         }
+        
+
         const images = [
             {url: preview, isPreview: true, photo: 'preview'},
             {url: photo1, isPreview: false, photo: 'photo1'},
@@ -61,27 +65,30 @@ const SpotForm = () => {
             {url: photo3, isPreview: false, photo: 'photo3'},
             {url: photo4, isPreview: false, photo: 'photo4'},
         ];
-
+        let imgErrors = {};
         for (let image of images) {
+            console.log(image)
             if(image.isPreview && !image.url) {
-                setImgValidationErrors({...imgValidationErrors, preview: "Preview image is required"})
+                imgErrors.preview ="Preview image is required";
             } else if(image.url.length > 1 && !(image.url.endsWith('.png') || image.url.endsWith('.jpg') || image.url.endsWith('.jpeg'))) {
-                setImgValidationErrors({...imgValidationErrors, [image.photo]: "Image URL must end in .png, .jpg, or .jpeg"})
-            } else if (!image.url) {
-                continue;
-            }
-            else {
+                imgErrors[image.photo] ="Image URL must end in .png, .jpg, or .jpeg";
+            } else if (image.url) {
                 await dispatch(addSpotImageThunk(image, spotId))
             }
         }
-
-        if(!Object.keys(spotValidationErrors).length && !Object.keys(imgValidationErrors).length) {
-            navigate(`/spots/${spotId}`)
+        if (Object.keys(imgErrors).length > 0) {
+            setImgValidationErrors(imgErrors);
+        }
+        
+    
+        if (Object.keys(spotErrors).length === 0 && Object.keys(imgValidationErrors).length === 0) {
+            navigate(`/spots/${spotId}`);
         }
         
     }
     
     console.log(spotValidationErrors)
+    console.log(imgValidationErrors)
     return (
         <div className="spot-form-container">
             <div>

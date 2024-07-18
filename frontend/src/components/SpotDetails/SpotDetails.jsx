@@ -5,23 +5,27 @@ import { fetchSpot } from "../../store/spots";
 import SpotDetailImages from "./SpotDetailImages/SpotDetailImages";
 import { CiStar } from "react-icons/ci";
 import './SpotDetails.css';
+import { getReviewsThunk } from "../../store/reviews";
+import SpotReviews from "../SpotReviews/SpotReviews";
 
 
 const SpotDetails = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const { spotId } = useParams();
-    const spot = useSelector(state => state.spotState.byId[spotId])
+    const spot = useSelector(state => state.spotState.byId[spotId]);
+    const reviews = useSelector(state => state.reviewState.allReviews);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const getSpot = async () => {
+        const loadData = async () => {
             await dispatch(fetchSpot(spotId));
+            await dispatch(getReviewsThunk(spotId));
             setIsLoaded(true);
         }
 
         if(!isLoaded) {
-            getSpot();
+            loadData();
         }
         
     }, [isLoaded, dispatch, spotId])
@@ -70,7 +74,7 @@ const SpotDetails = () => {
                 </main>
                 <footer className="reviews">
                                                 
-                <div className="review-header">
+                    <div className="review-header">
                     {spot.numReviews === null ? 
                         <>
                             <CiStar />
@@ -83,6 +87,8 @@ const SpotDetails = () => {
                             <h3>| {spot.numReviews === 1 ? `1 review`: `${spot.numReviews} reviews`}</h3>
                         </>}
                     </div>
+                    <SpotReviews reviews={reviews} />
+                
                 </footer>
             </div>
         )
