@@ -1,10 +1,12 @@
+import UpdateSpot from "../components/UpdateSpot/UpdateSpot";
 import { csrfFetch } from "./csrf"
 
 const GET_SPOTS = 'spots/getSpots';
 const GET_USER_SPOTS = 'spots/getUserSpots'
 const GET_ONE_SPOT = 'spots/getSpot';
 const ADD_SPOT = 'spots/addSpot';
-const DELETE_SPOT = 'spots/deleteSpot'
+const UPDATE_SPOT = 'spots/updateSpot';
+const DELETE_SPOT = 'spots/deleteSpot';
 
 
 
@@ -32,6 +34,13 @@ const getSpot = (spot) => {
 const addSpot = (spot) => {
     return {
         type: ADD_SPOT,
+        payload: spot
+    }
+}
+
+const updateSpot = (spot) => {
+    return {
+        type: UPDATE_SPOT,
         payload: spot
     }
 }
@@ -113,7 +122,29 @@ export const addSpotThunk = (spotBody) => async (dispatch) => {
         return err 
     }
 }
+// Update Spot
+export const updateSpotThunk = (spotBody, spotId) => async (dispatch) => {
+    try {
+        const options = {
+            method: 'PUT',
+            header: {'Content-Type': 'application/json'},
+            body: JSON.stringify(spotBody)
+        }
+        const res = await csrfFetch(`/api/spots/${spotId}`, options)
 
+        if (res.ok) {
+            const spot = await res.json();
+            dispatch(updateSpot(spot));
+            return spot;
+        } else {
+            const err = await res.json();
+            throw err;
+        }
+    } catch (error) {
+        
+        return error;
+    }
+}
 // Delete Spot 
 export const deleteSpotThunk = (spotId) => async (dispatch) => {
     try {
@@ -173,7 +204,22 @@ const spotReducer = (state = initialState, action) => {
             newState.byId ={...newState.byId, [action.payload.id]: action.payload}
 
             return newState;
-        
+        case UPDATE_SPOT: 
+            newState = {...state};
+
+            const updatedAllSpots = newState.allSpots.map(spot => {
+                if(spot.id === action.payload.id) {
+                    return action.payload;
+                } else {
+                    return spot;
+                }
+            })
+            console.log(updatedAllSpots)
+            newState.allSpots = updatedAllSpots;
+
+            newState.byId = {...byId, [action.payload.id]: action.payload}
+
+            return newState;
         case DELETE_SPOT:
             newState = {...state};
 

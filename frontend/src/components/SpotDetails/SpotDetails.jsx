@@ -30,7 +30,7 @@ const SpotDetails = () => {
         window.alert('Feature Coming Soon')
     }
     
-    console.log(spot)
+    // console.log(spot)
     if(!isLoaded){
         return (
             <h1>loading placeholder</h1>

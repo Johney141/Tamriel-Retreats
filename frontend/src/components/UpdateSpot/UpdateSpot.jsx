@@ -1,21 +1,25 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addSpotThunk } from '../../store/spots';
-import { addSpotImageThunk } from '../../store/spot-images';
+import { addSpotThunk, updateSpotThunk } from '../../store/spots';
+import { addSpotImageThunk, deleteSpotImageThunk } from '../../store/spot-images';
 import { useNavigate, useParams } from 'react-router-dom';
+import { fetchSpot } from '../../store/spots';
+
 
 const UpdateSpot = () => {
     const { spotId } = useParams();
-    const spot = useSelector(state => state.spotState.byId[spotId])
-    console.log(spot)
+    const spot = useSelector(state => state.spotState.byId[spotId]);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const [country, setCountry] = useState(spot.country);
-    const [address, setAddress] = useState(spot.address);
-    const [city, setCity] = useState(spot.city);
-    const [state, setState] = useState(spot.state);
-    const [description, setDescription] = useState(spot.description);
-    const [name, setName] = useState(spot.name);
-    const [price, setPrice] = useState(spot.price);
+    const [country, setCountry] = useState('');
+    const [address, setAddress] = useState('');
+    const [city, setCity] = useState('');
+    const [state, setState] = useState('');
+    const [description, setDescription] = useState('');
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState('');
     const [preview, setPreview] = useState('');
     const [photo1, setPhoto1] = useState('');
     const [photo2, setPhoto2] = useState('');
@@ -23,8 +27,37 @@ const UpdateSpot = () => {
     const [photo4, setPhoto4] = useState('');
     const [spotValidationErrors, setSpotValidationErrors] = useState({});
     const [imgValidationErrors, setImgValidationErrors] = useState({});
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+
+    useEffect(() => {
+        const getSpot = async () => {
+            await dispatch(fetchSpot(spotId));
+            setIsLoaded(true);
+        };
+
+        if (!isLoaded) {
+            getSpot();
+        }
+    }, [isLoaded, dispatch, spotId]);
+
+    useEffect(() => {
+        if (spot) {
+            setCountry(spot.country || '');
+            setAddress(spot.address || '');
+            setCity(spot.city || '');
+            setState(spot.state || '');
+            setDescription(spot.description || '');
+            setName(spot.name || '');
+            setPrice(spot.price || '');
+        }
+        
+        if (isLoaded && spot && spot.SpotImages) {
+            setPreview(spot.SpotImages[0]?.url || '');
+            setPhoto1(spot.SpotImages[1]?.url || '');
+            setPhoto2(spot.SpotImages[2]?.url || '');
+            setPhoto3(spot.SpotImages[3]?.url || '');
+            setPhoto4(spot.SpotImages[4]?.url || '');
+        }
+    }, [spot, isLoaded]);
 
 
     
@@ -48,21 +81,19 @@ const UpdateSpot = () => {
         setSpotValidationErrors({})
         setImgValidationErrors({})
         console.log("Errors Cleard: ", spotValidationErrors, imgValidationErrors )
-        const spotData =  await dispatch(addSpotThunk(spotBody))
+        const spotData =  await dispatch(updateSpotThunk(spotBody, spotId))
         // const parsedSpotData = await spotData.json();
         // console.log(spotData)
-        let spotId
+
         if(spotData.errors) {
             setSpotValidationErrors({...spotData.errors})
-        } else {
-            spotId = spotData.id;
-        }
+        } 
         const images = [
-            {url: preview, isPreview: true, photo: 'preview'},
-            {url: photo1, isPreview: false, photo: 'photo1'},
-            {url: photo2, isPreview: false, photo: 'photo2'},
-            {url: photo3, isPreview: false, photo: 'photo3'},
-            {url: photo4, isPreview: false, photo: 'photo4'},
+            {url: preview, isPreview: true, photo: 'preview', imgId: spot.SpotImages[0]?.id || null},
+            {url: photo1, isPreview: false, photo: 'photo1', imgId: spot.SpotImages[1]?.id || null},
+            {url: photo2, isPreview: false, photo: 'photo2', imgId: spot.SpotImages[2]?.id || null},
+            {url: photo3, isPreview: false, photo: 'photo3', imgId: spot.SpotImages[3]?.id || null},
+            {url: photo4, isPreview: false, photo: 'photo4', imgId: spot.SpotImages[4]?.id || null},
         ];
 
         for (let image of images) {
@@ -74,6 +105,9 @@ const UpdateSpot = () => {
                 continue;
             }
             else {
+                if(image.imgId){
+                    await dispatch(deleteSpotImageThunk(image.imgId))
+                }
                 await dispatch(addSpotImageThunk(image, spotId))
             }
         }
@@ -88,7 +122,7 @@ const UpdateSpot = () => {
     return (
         <div className="spot-form-container">
             <div>
-                <h1>Create a new Spot</h1>
+                <h1>Update your Spot</h1>
                 <h4>Where&apos;s your place located?</h4>
                 <p>Guests will only get your exact address once they booked a reservation.</p>
             </div>
@@ -252,7 +286,7 @@ const UpdateSpot = () => {
                     >{imgValidationErrors.photo4}
                     </p> : null}
                 </div>
-                <button type='submit'>Create Spot</button>
+                <button type='submit'>Update Spot</button>
 
             </form>
         </div>

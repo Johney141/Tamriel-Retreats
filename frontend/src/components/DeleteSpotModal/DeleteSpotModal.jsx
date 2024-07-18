@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import './DeleteSpot.css'
 import { useModal } from "../../context/Modal";
 import { useDispatch } from "react-redux";

@@ -1,9 +1,15 @@
 import { csrfFetch } from "./csrf";
 
 const ADD_SPOT_IMAGE = 'spotImage/addSpotImage';
+const DELETE_SPOT_IMAGE = 'spotImage/deleteSpotImage';
 
 const addSpotImage = (spotImg) => ({
     type: ADD_SPOT_IMAGE,
+    payload: spotImg
+})
+
+const deleteSpotImage = (spotImg) => ({
+    type: DELETE_SPOT_IMAGE,
     payload: spotImg
 })
 
@@ -34,6 +40,23 @@ export const addSpotImageThunk = (spotImg, spotId) => async (dispatch) => {
     }
 };
 
+export const deleteSpotImageThunk = (imageId) => async (dispatch) => {
+    try {
+        const options = {
+            method: 'DELETE',
+            header: {'Content-Type': 'application/json'}
+        }
+        const res = await csrfFetch(`/api/spot-images/${imageId}`, options)
+
+        if(res.ok) {
+            const data = await res.json();
+            dispatch(deleteSpotImage(data));
+        }
+    } catch (error) {
+        return error
+    }
+}
+
 const initialState = {
     allSpotImages: [],
     byId: {}
@@ -47,6 +70,15 @@ const spotImageReducer = (state = initialState, action) => {
             newState.allSpotImages = [...newState.allSpotImages, action.payload];
             newState.byId = {...newState.byId, [action.payload.id]: action.payload}
             return newState
+
+        case DELETE_SPOT_IMAGE: 
+            newState = {...state};
+
+            newState.allSpotImages = newState.allSpotImages.filter(spotImage => {
+                spotImage.id !== action.payload.id;
+            });
+
+            delete newState.byId[action.payload.id];
         default: {
             return state;
         }
