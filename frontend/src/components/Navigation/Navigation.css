@@ -28,6 +28,7 @@
     border: none;
     color: blue;
     cursor: pointer;
+    background: none;
 }
 
 #createSpotButton:hover {

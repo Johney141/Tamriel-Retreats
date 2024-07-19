@@ -6,7 +6,7 @@ import { useModal } from "../../../context/Modal";
 import { addReviewThunk } from "../../../store/reviews";
 
 
-const CreateReviewModal = ({spotId}) => {
+const CreateReviewModal = ({spotId, user}) => {
     const [review, setReview] = useState('');
     const [stars, setStars] = useState(0);
     const [hover, setHover] = useState(0);
@@ -24,7 +24,7 @@ const CreateReviewModal = ({spotId}) => {
         };
         setReviewErrors({});
 
-        const reviewData = await dispatch(addReviewThunk(reviewBody, spotId));
+        const reviewData = await dispatch(addReviewThunk(reviewBody, spotId, user));
         let errors = {};
         if(reviewData.message) {
             errors = {...reviewData.message};
@@ -32,7 +32,7 @@ const CreateReviewModal = ({spotId}) => {
         }
 
         if(!Object.keys(errors).length) {
-            closeModal()
+            closeModal();
         }
 
 
@@ -65,6 +65,7 @@ const CreateReviewModal = ({spotId}) => {
             </div>
             <button
                 disabled={review.length < 10 || stars < 1 ? true : false}
+                onClick={e => handleSubmit(e)}
             >
                 Submit Your Review
             </button>

@@ -14,9 +14,10 @@ import CreateReviewModal from "../SpotReviews/CreateReviewModal/CreateReviewModa
 const SpotDetails = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const { spotId } = useParams();
-    const userId = useSelector(state => state.session.user.id)
+    const user = useSelector(state => state.session.user)
     const spot = useSelector(state => state.spotState.byId[spotId]);
     const reviews = useSelector(state => state.reviewState.allReviews);
+
 
     const dispatch = useDispatch();
 
@@ -30,12 +31,28 @@ const SpotDetails = () => {
         if(!isLoaded) {
             loadData();
         }
-        
-    }, [isLoaded, dispatch, spotId])
 
+        
+    }, [isLoaded, dispatch, spotId, ])
+
+
+    const userHasReview = (reviews) => {
+        for(let review of reviews) {
+            if(review.userId === user.id) {
+                return true
+            }
+        }
+        return false 
+    }
+
+    const handleDeleteReview = () => {
+        setIsLoaded(false);
+    }
     const handleBooking = () => {
         window.alert('Feature Coming Soon')
     }
+
+
     
     // console.log(spot)
     if(!isLoaded){
@@ -83,26 +100,29 @@ const SpotDetails = () => {
                         <>
                             <CiStar />
                             <h3>New</h3>
-                            {spot.ownerId !== userId ? 
-                                <button>
-                                    Post Your Review
-                                </button> : null}
+                            {spot.ownerId !== user.id ? 
+                            <div>
+                                <OpenModalButton 
+                                    buttonText={'Post Your Review'}
+                                    modalComponent={<CreateReviewModal spotId={spot.id} user={user} />}
+                                />
+                            </div> : null}
                         </>
                     : 
                         <>
                             <CiStar /> 
                             <h3 id="avgRating">{spot.avgStarRating} | {spot.numReviews === 1 ? `1 review`: `${spot.numReviews} reviews`}</h3>
 
-                            {spot.ownerId !== userId ?
+                            {spot.ownerId !== user.id && !userHasReview(reviews) ?
                             <div>
                                 <OpenModalButton 
                                     buttonText={'Post Your Review'}
-                                    modalComponent={<CreateReviewModal spotId={spot.id}/>}
+                                    modalComponent={<CreateReviewModal spotId={spot.id} user={user} />}
                                 />
                             </div> : null}
                         </>}
                     </div>
-                    <SpotReviews reviews={reviews} />
+                    <SpotReviews reviews={reviews} user={user} reviewDeleted={handleDeleteReview}/>
                 
                 </footer>
             </div>
