@@ -84,6 +84,8 @@ const spotImageReducer = (state = initialState, action) => {
             });
 
             delete newState.byId[action.payload.id];
+            
+            return newState;
         default: {
             return state;
         }

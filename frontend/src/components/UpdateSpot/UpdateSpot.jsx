@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addSpotThunk, updateSpotThunk } from '../../store/spots';
+import { updateSpotThunk } from '../../store/spots';
 import { addSpotImageThunk, deleteSpotImageThunk } from '../../store/spot-images';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchSpot } from '../../store/spots';

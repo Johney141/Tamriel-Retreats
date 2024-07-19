@@ -7,11 +7,14 @@ import { CiStar } from "react-icons/ci";
 import './SpotDetails.css';
 import { getReviewsThunk } from "../../store/reviews";
 import SpotReviews from "../SpotReviews/SpotReviews";
+import OpenModalButton from "../OpenModalButton/OpenModalButton";
+import CreateReviewModal from "../SpotReviews/CreateReviewModal/CreateReviewModal";
 
 
 const SpotDetails = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const { spotId } = useParams();
+    const userId = useSelector(state => state.session.user.id)
     const spot = useSelector(state => state.spotState.byId[spotId]);
     const reviews = useSelector(state => state.reviewState.allReviews);
 
@@ -60,6 +63,7 @@ const SpotDetails = () => {
                                     <>
                                         <CiStar />
                                         <h3>New</h3>
+
                                     </>
                                 : 
                                     <>
@@ -79,12 +83,23 @@ const SpotDetails = () => {
                         <>
                             <CiStar />
                             <h3>New</h3>
+                            {spot.ownerId !== userId ? 
+                                <button>
+                                    Post Your Review
+                                </button> : null}
                         </>
                     : 
                         <>
                             <CiStar /> 
-                            <h3 id="avgRating">{spot.avgStarRating} </h3>
-                            <h3>| {spot.numReviews === 1 ? `1 review`: `${spot.numReviews} reviews`}</h3>
+                            <h3 id="avgRating">{spot.avgStarRating} | {spot.numReviews === 1 ? `1 review`: `${spot.numReviews} reviews`}</h3>
+
+                            {spot.ownerId !== userId ?
+                            <div>
+                                <OpenModalButton 
+                                    buttonText={'Post Your Review'}
+                                    modalComponent={<CreateReviewModal spotId={spot.id}/>}
+                                />
+                            </div> : null}
                         </>}
                     </div>
                     <SpotReviews reviews={reviews} />

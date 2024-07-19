@@ -1,4 +1,3 @@
-import UpdateSpot from "../components/UpdateSpot/UpdateSpot";
 import { csrfFetch } from "./csrf"
 
 const GET_SPOTS = 'spots/getSpots';
@@ -139,7 +138,7 @@ export const updateSpotThunk = (spotBody, spotId) => async (dispatch) => {
         } else {
             
             
-            throw err;
+            throw res;
         }
     } catch (error) {
         const err = await error.json();
@@ -158,7 +157,7 @@ export const deleteSpotThunk = (spotId) => async (dispatch) => {
 
         if (res.ok) {
             const data = await res.json();
-            dispatch()
+            dispatch(deleteSpot(data))
         }
     } catch (error) {
         return error
@@ -206,7 +205,7 @@ const spotReducer = (state = initialState, action) => {
             newState.byId ={...newState.byId, [action.payload.id]: action.payload}
 
             return newState;
-        case UPDATE_SPOT: 
+        case UPDATE_SPOT: {
             newState = {...state};
 
             const updatedAllSpots = newState.allSpots.map(spot => {
@@ -222,6 +221,7 @@ const spotReducer = (state = initialState, action) => {
             newState.byId = {...newState.byId, [action.payload.id]: action.payload}
 
             return newState;
+        }
         case DELETE_SPOT:
             newState = {...state};
 
@@ -230,6 +230,8 @@ const spotReducer = (state = initialState, action) => {
             })
 
             delete newState.byId[action.payload.id]
+
+            return newState
         default: 
             return state
     }
