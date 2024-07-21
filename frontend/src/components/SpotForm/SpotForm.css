@@ -8,6 +8,7 @@
     padding: 2rem;
     border: 1px solid #ccc;
     border-radius: 25px;
+    color: #525251;
 }
 
 .input-container {
@@ -19,6 +20,15 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
+}
+
+.form-captions {
+    color: #8F8F8D
+}
+
+.input-title {
+    font-weight: 600;
+    color: #525251;
 }
 
 #spotDescription {
@@ -33,4 +43,22 @@
 .label-container {
     display: flex;
     align-items: center;
+}
+
+.submit-button-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+}
+#formSubmit {
+    cursor: pointer;
+    border-radius: 25px;
+    padding: .5rem;
+    background-color: #FF385C;
+    color: white;
+}
+
+#formSubmit:hover {
+    box-shadow: 0 0 5px 2px black;
 }

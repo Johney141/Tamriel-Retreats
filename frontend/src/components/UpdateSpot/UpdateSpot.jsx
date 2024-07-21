@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSpotThunk } from '../../store/spots';
-import { addSpotImageThunk, deleteSpotImageThunk } from '../../store/spot-images';
+import { addSpotImageThunk, deleteSpotImages } from '../../store/spot-images';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchSpot } from '../../store/spots';
 
@@ -51,11 +51,15 @@ const UpdateSpot = () => {
         }
         
         if (isLoaded && spot && spot.SpotImages) {
-            setPreview(spot.SpotImages[0]?.url || '');
-            setPhoto1(spot.SpotImages[1]?.url || '');
-            setPhoto2(spot.SpotImages[2]?.url || '');
-            setPhoto3(spot.SpotImages[3]?.url || '');
-            setPhoto4(spot.SpotImages[4]?.url || '');
+            const previewImage = spot.SpotImages.find(image => image.isPreview);
+            const otherImages = spot.SpotImages.filter(image => !image.isPreview);
+    
+            setPreview(previewImage?.url || '');
+    
+            setPhoto1(otherImages[0]?.url || '');
+            setPhoto2(otherImages[1]?.url || '');
+            setPhoto3(otherImages[2]?.url || '');
+            setPhoto4(otherImages[3]?.url || '');
         }
     }, [spot, isLoaded]);
 
@@ -99,28 +103,25 @@ const UpdateSpot = () => {
     
  
         const images = [
-            { url: preview, isPreview: true, photo: 'preview', imgId: spot?.SpotImages[0]?.id || null },
-            { url: photo1, isPreview: false, photo: 'photo1', imgId: spot?.SpotImages[1]?.id || null },
-            { url: photo2, isPreview: false, photo: 'photo2', imgId: spot?.SpotImages[2]?.id || null },
-            { url: photo3, isPreview: false, photo: 'photo3', imgId: spot?.SpotImages[3]?.id || null },
-            { url: photo4, isPreview: false, photo: 'photo4', imgId: spot?.SpotImages[4]?.id || null },
+            { url: preview, isPreview: true, photo: 'preview' },
+            { url: photo1, isPreview: false, photo: 'photo1' },
+            { url: photo2, isPreview: false, photo: 'photo2' },
+            { url: photo3, isPreview: false, photo: 'photo3' },
+            { url: photo4, isPreview: false, photo: 'photo4' },
         ];
     
-      
+        await deleteSpotImages(spotId); 
+    
         const imageErrors = {};
         for (let image of images) {
             if (image.isPreview && !image.url) {
                 imageErrors.preview = "Preview image is required";
             } else if (image.url.length && !(image.url.endsWith('.png') || image.url.endsWith('.jpg') || image.url.endsWith('.jpeg'))) {
                 imageErrors[image.photo] = "Image URL must end in .png, .jpg, or .jpeg";
-            } else if (image.url && image.imgId) {
-                await dispatch(deleteSpotImageThunk(image.imgId));
-                await dispatch(addSpotImageThunk(image, spotId));
             } else if (image.url) {
                 await dispatch(addSpotImageThunk(image, spotId));
             }
         }
-    
        
         if (Object.keys(imageErrors).length) {
             setImgValidationErrors(imageErrors);
@@ -138,12 +139,12 @@ const UpdateSpot = () => {
             <div>
                 <h1>Update your Spot</h1>
                 <h4>Where&apos;s your place located?</h4>
-                <p>Guests will only get your exact address once they booked a reservation.</p>
+                <p className='form-captions'>Guests will only get your exact address once they booked a reservation.</p>
             </div>
             <form onSubmit={handleSubmit}>
                 <div className='input-container'>
                     <div className='label-container'>
-                        <label>Country</label>
+                        <label className='input-title'>Country</label>
                         {spotValidationErrors.country ? <p className='error'
                         >{spotValidationErrors.country}
                         </p> : null}
@@ -157,7 +158,7 @@ const UpdateSpot = () => {
                 </div>
                 <div className='input-container'>
                     <div className='label-container'>
-                        <label>Street Address</label>
+                        <label className='input-title'>Street Address</label>
                         {spotValidationErrors.address ? <p className='error'
                         >{spotValidationErrors.address}
                         </p> : null}
@@ -172,7 +173,7 @@ const UpdateSpot = () => {
                 <div className='city-state'>
                     <div className='input-container'>
                         <div className='label-container'>
-                            <label>City</label>
+                            <label className='input-title'>City</label>
                             {spotValidationErrors.city ? <p className='error'
                             >{spotValidationErrors.city}
                             </p> : null}
@@ -186,7 +187,7 @@ const UpdateSpot = () => {
                     </div>
                     <div className='input-container'>
                         <div className='label-container'>
-                            <label>State</label>
+                            <label className='input-title'>State</label>
                             {spotValidationErrors.state ? <p 
                                 className='error'
                             >{spotValidationErrors.state}
@@ -202,7 +203,7 @@ const UpdateSpot = () => {
                 </div>
                 <div className='input-container'>
                     <h4>Describe your place to guests</h4>
-                    <label>
+                    <label className='form-captions'>
                         Mention the best features of your space,any special amentities like
                         fast wi-fi or parking, and what you love about the neighborhood.
                     </label>
@@ -210,7 +211,7 @@ const UpdateSpot = () => {
                         id='spotDescription'
                         rows={10}
                         onChange={(e) => setDescription(e.target.value)}                    
-                        placeholder='Description'
+                        placeholder='Please write at least 30 characters'
                         value={description}
                     ></textarea>
                     {spotValidationErrors.description ? <p className='error'
@@ -219,7 +220,7 @@ const UpdateSpot = () => {
                 </div>
                 <div className='input-container'>
                     <h4>Create a title for your Spot</h4>
-                    <label>
+                    <label className='form-captions'>
                         Catch guests attention with a spot title that highlights with
                         what makes your place special.
                     </label>
@@ -235,14 +236,14 @@ const UpdateSpot = () => {
                 </div>
                 <div className='input-container'>
                     <h4>Set a base price for your spot</h4>
-                    <label>
+                    <label className='form-captions'>
                         Competitive pricing can help your listing stand out and rank higher in search results.
                     </label>
                     <input 
                         type="text" 
                         onChange={(e) => setPrice(e.target.value)}
                         placeholder='Price per night (Gold)'
-                        value={price}
+                        value={price === 0 ? '' : price}
                     />
                     {spotValidationErrors.price ? <p className='error'
                     >{spotValidationErrors.price}
@@ -250,7 +251,7 @@ const UpdateSpot = () => {
                 </div>
                 <div className='input-container'>
                     <h4>Liven Up your spot with photos</h4>
-                    <p>Submit a link to at least one photo to publish your spot.</p>
+                    <p className='form-captions'>Submit a link to at least one photo to publish your spot.</p>
                     <input 
                         type="text" 
                         onChange={(e) => setPreview(e.target.value)}
@@ -300,8 +301,9 @@ const UpdateSpot = () => {
                     >{imgValidationErrors.photo4}
                     </p> : null}
                 </div>
-                <button type='submit'>Update Spot</button>
-
+                <div className='submit-button-container'>
+                    <button type='submit' id='formSubmit'>Update Spot</button>
+                </div>
             </form>
         </div>
     )

@@ -23,14 +23,14 @@ const DeleteReviewModal = ({reviewId, reviewDeleted}) => {
     return (
         <div className="delete-review-container">
             <h1>Confirm Delete</h1>
-            <p>Are you sure you want to remove this spot from the listings?</p>
+            <p>Are you sure you want to delete this review?</p>
             <button 
                 className="delete-button"
-                onClick={(e) => handleDelete(e)}>Yes (Delete Spot)</button>
+                onClick={(e) => handleDelete(e)}>Yes (Delete Review)</button>
             <button 
                 className="keep-button"
                 onClick={closeModal}
-            >No (Keep Spot)</button>
+            >No (Keep Review)</button>
         </div>
     )
 }

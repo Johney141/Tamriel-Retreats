@@ -9,6 +9,7 @@ const DELETE_SPOT = 'spots/deleteSpot';
 
 
 
+
 const getSpots = (spots) => {
     return {
         type: GET_SPOTS,

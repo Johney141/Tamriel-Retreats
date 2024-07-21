@@ -63,7 +63,8 @@ const LandingPage = () => {
                         <p>{spot.city}, {spot.state}</p>
                         <div className="star-rating">
                             <CiStar />
-                            <p>{spot.avgRating}</p>
+                            {spot.avgRating ? <p>{spot.avgRating}</p> : <p>New</p>}
+                            
                         </div>
                     </div>
                     <p className="pricing"><b>${spot.price}</b>/night</p>

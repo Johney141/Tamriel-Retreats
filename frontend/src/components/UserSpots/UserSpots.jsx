@@ -39,7 +39,7 @@ const UserSpots = () => {
 
 
     return (
-        <>
+        <div className="user-spots-container">
         <div>
             <h1>Manage Your Spots</h1>
             <button
@@ -77,7 +77,7 @@ const UserSpots = () => {
             ))}
 
         </div>
-        </>
+        </div>
     )
     
 }

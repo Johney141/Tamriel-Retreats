@@ -62,6 +62,24 @@ export const deleteSpotImageThunk = (imageId) => async (dispatch) => {
     }
 }
 
+export const deleteSpotImages = async (spotId) => {
+    try {
+        console.log('Attempting to delte')
+        const options = {
+            method: "DELETE",
+            header: {"Content-Type": "application/json"}
+        }
+        const res = await csrfFetch(`/api/spots/${spotId}/images`, options)
+        if(res.ok) {
+            console.log("Spots Images Delted") 
+        } else {
+            throw res
+        }
+    } catch (error) {
+        return error
+    }
+}
+
 const initialState = {
     allSpotImages: [],
     byId: {}

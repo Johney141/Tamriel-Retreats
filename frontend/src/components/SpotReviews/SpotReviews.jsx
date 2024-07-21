@@ -1,5 +1,6 @@
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
 import DeleteReviewModal from "./DeleteReviewModal/DeleteReviewModal";
+import './SpotReviews.css';
 
 
 

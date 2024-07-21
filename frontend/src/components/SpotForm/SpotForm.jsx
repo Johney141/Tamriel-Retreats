@@ -81,7 +81,7 @@ const SpotForm = () => {
         }
         
     
-        if (Object.keys(spotErrors).length === 0 && Object.keys(imgValidationErrors).length === 0) {
+        if (!Object.keys(spotErrors).length && !Object.keys(imgErrors).length) {
             navigate(`/spots/${spotId}`);
         }
         
@@ -94,12 +94,12 @@ const SpotForm = () => {
             <div>
                 <h1>Create a new Spot</h1>
                 <h4>Where&apos;s your place located?</h4>
-                <p>Guests will only get your exact address once they booked a reservation.</p>
+                <p className='form-captions'>Guests will only get your exact address once they booked a reservation.</p>
             </div>
             <form onSubmit={handleSubmit}>
                 <div className='input-container'>
                     <div className='label-container'>
-                        <label>Country</label>
+                        <label className='input-title'>Country</label>
                         {spotValidationErrors.country ? <p className='error'
                         >{spotValidationErrors.country}
                         </p> : null}
@@ -113,7 +113,7 @@ const SpotForm = () => {
                 </div>
                 <div className='input-container'>
                     <div className='label-container'>
-                        <label>Street Address</label>
+                        <label className='input-title'>Street Address</label>
                         {spotValidationErrors.address ? <p className='error'
                         >{spotValidationErrors.address}
                         </p> : null}
@@ -128,7 +128,7 @@ const SpotForm = () => {
                 <div className='city-state'>
                     <div className='input-container'>
                         <div className='label-container'>
-                            <label>City</label>
+                            <label className='input-title'>City</label>
                             {spotValidationErrors.city ? <p className='error'
                             >{spotValidationErrors.city}
                             </p> : null}
@@ -142,7 +142,7 @@ const SpotForm = () => {
                     </div>
                     <div className='input-container'>
                         <div className='label-container'>
-                            <label>State</label>
+                            <label className='input-title'>State</label>
                             {spotValidationErrors.state ? <p 
                                 className='error'
                             >{spotValidationErrors.state}
@@ -158,7 +158,7 @@ const SpotForm = () => {
                 </div>
                 <div className='input-container'>
                     <h4>Describe your place to guests</h4>
-                    <label>
+                    <label className='form-captions'>
                         Mention the best features of your space,any special amentities like
                         fast wi-fi or parking, and what you love about the neighborhood.
                     </label>
@@ -166,7 +166,7 @@ const SpotForm = () => {
                         id='spotDescription'
                         rows={10}
                         onChange={(e) => setDescription(e.target.value)}                    
-                        placeholder='Description'
+                        placeholder='Please write at least 30 characters'
                         value={description}
                     ></textarea>
                     {spotValidationErrors.description ? <p className='error'
@@ -175,7 +175,7 @@ const SpotForm = () => {
                 </div>
                 <div className='input-container'>
                     <h4>Create a title for your Spot</h4>
-                    <label>
+                    <label className='form-captions'>
                         Catch guests attention with a spot title that highlights with
                         what makes your place special.
                     </label>
@@ -191,14 +191,14 @@ const SpotForm = () => {
                 </div>
                 <div className='input-container'>
                     <h4>Set a base price for your spot</h4>
-                    <label>
+                    <label className='form-captions'>
                         Competitive pricing can help your listing stand out and rank higher in search results.
                     </label>
                     <input 
                         type="text" 
                         onChange={(e) => setPrice(e.target.value)}
                         placeholder='Price per night (Gold)'
-                        value={price}
+                        value={price === 0 ? '' : price}
                     />
                     {spotValidationErrors.price ? <p className='error'
                     >{spotValidationErrors.price}
@@ -206,7 +206,7 @@ const SpotForm = () => {
                 </div>
                 <div className='input-container'>
                     <h4>Liven Up your spot with photos</h4>
-                    <p>Submit a link to at least one photo to publish your spot.</p>
+                    <p className='form-captions'>Submit a link to at least one photo to publish your spot.</p>
                     <input 
                         type="text" 
                         onChange={(e) => setPreview(e.target.value)}
@@ -256,8 +256,9 @@ const SpotForm = () => {
                     >{imgValidationErrors.photo4}
                     </p> : null}
                 </div>
-                <button type='submit'>Create Spot</button>
-
+                <div className='submit-button-container'>
+                    <button type='submit' id='formSubmit'>Create Spot</button>
+                </div>
             </form>
         </div>
     )

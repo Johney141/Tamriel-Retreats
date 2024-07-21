@@ -17,6 +17,7 @@ const SpotDetails = () => {
     const user = useSelector(state => state.session.user)
     const spot = useSelector(state => state.spotState.byId[spotId]);
     const reviews = useSelector(state => state.reviewState.allReviews);
+    const orderedReviews = reviews.toReversed();
 
 
     const dispatch = useDispatch();
@@ -45,7 +46,7 @@ const SpotDetails = () => {
         return false 
     }
 
-    const handleDeleteReview = () => {
+    const handleReview = () => {
         setIsLoaded(false);
     }
     const handleBooking = () => {
@@ -86,7 +87,7 @@ const SpotDetails = () => {
                                     <>
                                         <CiStar /> 
                                         <h3 id="avgRating">{spot.avgStarRating} </h3>
-                                        <h3>| {spot.numReviews === 1 ? `1 review`: `${spot.numReviews} reviews`}</h3>
+                                        <h3>| {spot.numReviews === 1 ? `1 Review`: `${spot.numReviews} Reviews`}</h3>
                                     </>}
                             </div>
                         </div>
@@ -97,32 +98,36 @@ const SpotDetails = () => {
                                                 
                     <div className="review-header">
                     {spot.numReviews === null ? 
-                        <>
-                            <CiStar />
-                            <h3>New</h3>
-                            {spot.ownerId !== user.id ? 
+                        <div>
+                            <span className="review-ratings">
+                                <CiStar />
+                                <h3>New</h3>
+                            </span>
+                            {user && spot.ownerId !== user.id ? 
                             <div>
                                 <OpenModalButton 
                                     buttonText={'Post Your Review'}
-                                    modalComponent={<CreateReviewModal spotId={spot.id} user={user} />}
+                                    modalComponent={<CreateReviewModal spotId={spot.id} user={user} reviewCreated={handleReview}/>}
                                 />
                             </div> : null}
-                        </>
+                            <p>Be the first to post a review!</p>
+                        </div >
                     : 
-                        <>
-                            <CiStar /> 
-                            <h3 id="avgRating">{spot.avgStarRating} | {spot.numReviews === 1 ? `1 review`: `${spot.numReviews} reviews`}</h3>
-
-                            {spot.ownerId !== user.id && !userHasReview(reviews) ?
+                        <div>
+                            <span className="review-ratings">
+                                <CiStar /> 
+                                <h3 id="avgRating">{spot.avgStarRating} | {spot.numReviews === 1 ? `1 Review`: `${spot.numReviews} Reviews`}</h3>
+                            </span>
+                            {user && (spot.ownerId !== user.id && !userHasReview(reviews)) ?
                             <div>
                                 <OpenModalButton 
                                     buttonText={'Post Your Review'}
-                                    modalComponent={<CreateReviewModal spotId={spot.id} user={user} />}
+                                    modalComponent={<CreateReviewModal spotId={spot.id} user={user} reviewCreated={handleReview}/>}
                                 />
                             </div> : null}
-                        </>}
+                        </div>}
                     </div>
-                    <SpotReviews reviews={reviews} user={user} reviewDeleted={handleDeleteReview}/>
+                    <SpotReviews reviews={orderedReviews} user={user} reviewDeleted={handleReview}/>
                 
                 </footer>
             </div>

@@ -40,6 +40,11 @@
     display: flex;
     align-items: center;
 }
+
+.review-ratings {
+    display: flex;
+    align-items: center;
+}
 #bookingButton {
     background-color: #FF385C;;
     padding: 1rem;

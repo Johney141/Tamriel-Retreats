@@ -39,6 +39,7 @@ function ProfileButton({ user }) {
   const logout = (e) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
+    navigate('/')
   };
 
   const handleMangeSpots = (e) => {
@@ -58,7 +59,7 @@ function ProfileButton({ user }) {
         {user ? (
           <div className='user-container'>
             <div className='user-info'>
-              <p>Hello, {user.username}</p>
+              <p>Hello, {user.firstName}</p>
               <p>{user.email}</p>
             </div>
             <div>

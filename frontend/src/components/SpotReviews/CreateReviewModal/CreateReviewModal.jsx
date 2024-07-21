@@ -6,7 +6,7 @@ import { useModal } from "../../../context/Modal";
 import { addReviewThunk } from "../../../store/reviews";
 
 
-const CreateReviewModal = ({spotId, user}) => {
+const CreateReviewModal = ({spotId, user, reviewCreated}) => {
     const [review, setReview] = useState('');
     const [stars, setStars] = useState(0);
     const [hover, setHover] = useState(0);
@@ -32,6 +32,7 @@ const CreateReviewModal = ({spotId, user}) => {
         }
 
         if(!Object.keys(errors).length) {
+            reviewCreated();
             closeModal();
         }
 
@@ -62,6 +63,7 @@ const CreateReviewModal = ({spotId, user}) => {
                         {star <= (hover || stars) ? <FaStar /> : <FaRegStar />}
                     </span>
                 ))}
+                Stars
             </div>
             <button
                 disabled={review.length < 10 || stars < 1 ? true : false}
