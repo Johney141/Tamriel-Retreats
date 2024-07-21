@@ -4,6 +4,7 @@ import { FaRegStar } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../../context/Modal";
 import { addReviewThunk } from "../../../store/reviews";
+import './CreateReviewModal.css'
 
 
 const CreateReviewModal = ({spotId, user, reviewCreated}) => {
@@ -40,7 +41,7 @@ const CreateReviewModal = ({spotId, user, reviewCreated}) => {
     }
 
     return (
-        <div>
+        <div className="create-review-form">
             <h1>How was your stay?</h1>
             {reviewErrors.message ? 
                 <p className="error">Review already exists for this spot</p> :
@@ -49,6 +50,7 @@ const CreateReviewModal = ({spotId, user, reviewCreated}) => {
                 id="reviewText"
                 onChange={e => setReview(e.target.value)}
                 value={review}
+                rows={10}
                 placeholder="Leave your review here"
             ></textarea>
             <div className="stars">
@@ -68,6 +70,7 @@ const CreateReviewModal = ({spotId, user, reviewCreated}) => {
             <button
                 disabled={review.length < 10 || stars < 1 ? true : false}
                 onClick={e => handleSubmit(e)}
+                id="reviewButton"
             >
                 Submit Your Review
             </button>
