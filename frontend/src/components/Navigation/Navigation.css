@@ -5,7 +5,8 @@
     align-items: center;
     padding-bottom: 2rem;
     padding-top: 1rem;
-    border-bottom: 1px solid #EBEBEB;
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 10px;
 }
 
 #home-button {
@@ -18,4 +19,18 @@
     display: flex;
     align-items: center;
     
+}
+.create-profile-container {
+    display: flex;
+}
+
+#createSpotButton {
+    border: none;
+    color: blue;
+    cursor: pointer;
+    background: none;
+}
+
+#createSpotButton:hover {
+    color: darkgrey;
 }

@@ -7,14 +7,16 @@ import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
 import SignupFormModal from '../SignupFormModal/SignupFormModal';
 import './ProfileButton.css'
+import { useNavigate } from 'react-router-dom';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
+  const navigate = useNavigate();
 
   const toggleMenu = (e) => {
-    e.stopPropagation(); // Keep from bubbling up to document and triggering closeMenu
+    e.stopPropagation(); 
     setShowMenu(!showMenu);
   };
 
@@ -37,7 +39,13 @@ function ProfileButton({ user }) {
   const logout = (e) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
+    navigate('/')
   };
+
+  const handleMangeSpots = (e) => {
+    e.preventDefault();
+    navigate('/spots/current')
+  }
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
@@ -49,14 +57,27 @@ function ProfileButton({ user }) {
       </button>
       <div className={ulClassName} ref={ulRef}>
         {user ? (
-          <>
-            <div>{user.username}</div>
-            <div>{user.firstName} {user.lastName}</div>
-            <div>{user.email}</div>
-            <div>
-              <button onClick={logout}>Log Out</button>
+          <div className='user-container'>
+            <div className='user-info'>
+              <p>Hello, {user.firstName}</p>
+              <p>{user.email}</p>
             </div>
-          </>
+            <div>
+              <button
+                onClick={handleMangeSpots}
+                id='manageSpots'
+              >
+                Manage Spots
+              </button>
+            </div>
+            <div>
+              <button 
+                onClick={logout} 
+                id='logoutButton'>
+                Log Out
+              </button>
+            </div>
+          </div>
         ) : (
           <div className='profile-container'>
             <div className='profile-dropdown'>

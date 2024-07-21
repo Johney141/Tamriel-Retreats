@@ -1,0 +1,22 @@
+.delete-spot-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.delete-button,
+.keep-button {
+    width: 100%;
+    padding: 1rem;
+    margin: .25rem;
+    cursor: pointer;
+    color: white;
+}
+
+.delete-button {
+    background-color: #FF385C;
+}
+
+.keep-button {
+    background-color: darkgrey;
+}

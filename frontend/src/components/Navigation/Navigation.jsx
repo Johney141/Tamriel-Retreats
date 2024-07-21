@@ -8,24 +8,34 @@ function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleHomeClick = () => {
     navigate('/')
   }
 
-
+  const handleCreateClick = () => {
+    navigate('/spots/create-a-spot')
+  }
   return (
     <nav className='navbar'>
       <div className='nav-item'>
       <button
           id='home-button'
-          onClick={handleClick}
+          onClick={handleHomeClick}
         >
           <FaAirbnb />
           Tamriel Retreats
       </button>
       </div>
       {isLoaded && (
-        <div>
+        <div className='create-profile-container'>
+          {sessionUser ? (
+            <button 
+              id='createSpotButton'
+              onClick={handleCreateClick}
+              >
+              Create a New Spot
+            </button>
+          ) : null}
           <ProfileButton user={sessionUser} />
         </div>
       )}

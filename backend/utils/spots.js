@@ -23,13 +23,13 @@ const fullSpots = async (spots) => {
             let reviewCount = reviews.length;
             let starSum = reviews.reduce((sum, review) => sum + review.stars, 0);
 
-            updatedSpot.avgRating = starSum / reviewCount;
+            updatedSpot.avgRating = (starSum / reviewCount).toFixed(1);
         } else {
             updatedSpot.avgRating = null;
         }
         if(spot.SpotImages.length > 0){   
             // Add Preview Image
-            const previewImage = spot.SpotImages[0]
+            const previewImage = spot.SpotImages[0];
 
             updatedSpot.previewImage = previewImage.url;
 
@@ -68,7 +68,7 @@ const fullSpot = (spot) => {
         const reviews = spot.Reviews;
         const numReviews = reviews.length;
         let starSum = reviews.reduce((sum, review) => sum + review.stars, 0);
-        const avgRating = starSum / numReviews;
+        const avgRating = (starSum / numReviews).toFixed(1);
 
 
         updatedSpot.numReviews = numReviews;

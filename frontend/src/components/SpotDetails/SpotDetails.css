@@ -1,0 +1,82 @@
+.detail-container,
+.detail-container .navbar {
+    max-width: 1000px;
+    margin: 0 auto;
+    
+}
+.booking-container {
+    border: 1px solid lightgrey;
+    box-shadow: 0 0 3px 0  #0000001a;
+    border-radius: 20px;
+    width: 40%;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.spot-information,
+.booking-ratings,
+.booking-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.booking-info {
+    width: 100%;
+    margin-bottom: 20px; 
+}
+.spot-information {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid lightgray;
+}
+
+.description {
+    width: 55%;
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+}
+
+.review-ratings {
+    display: flex;
+    align-items: center;
+}
+#bookingButton {
+    background-color: #FF385C;;
+    padding: 1rem;
+    width: 75%;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    
+}
+
+#spotDescription,
+#spotLocation {
+    color: #6a6a6a;
+}
+
+#avgRating {
+    margin-right: .5rem;
+}
+
+#spotTitle {
+    font-size: 26px;
+    font-weight: 550;
+}
+
+.review-modal {
+    margin-bottom: 1rem;
+    cursor: pointer;
+    border-radius: 10px;
+    color: white;
+    background-color: #FF385C;
+}
+
+.review-modal:hover {
+    background-color: rgb(95, 94, 94);
+}

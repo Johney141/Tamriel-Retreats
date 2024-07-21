@@ -243,12 +243,11 @@ const validateSpot = [
         .withMessage('Longitude is not valid'),
     check('name')
         .exists({checkFalsy: true})
-        .isString()
-        .isLength({max: 50})
-        .withMessage("Name must be less than 50 characters"),
+        .withMessage('Name is required'),
+
     check('description')
-        .exists({checkFalsy: true})
-        .withMessage("Description is required"),
+        .exists({checkFalsy: true}).withMessage("Description is required")
+        .isLength({min: 30}).withMessage("Description needs a minimum of 30 characters"),
     check('price')
         .exists({checkFalsy: true})
         .isInt({min: 1})
@@ -293,7 +292,7 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
             createdAt: newSpot.createdAt,
             updatedAt: newSpot.updatedAt
         }
-        
+        console.log(responseSpot)
         return res.status(201).json(responseSpot);
 
     } catch (error) {
@@ -460,11 +459,11 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
             return next(notAuth)
         }
 
-        const { url, preview } = req.body;
+        const { url, isPreview } = req.body;
         const newSpotImage = await SpotImage.create({
             url,
             spotId,
-            isPreview: preview
+            isPreview
         });
 
         return res.status(201).json({
@@ -591,6 +590,43 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
     }
 })
 
+router.delete('/:spotId/images', requireAuth, async (req, res, next) => {
+    try {
+        const spotId = parseInt(req.params.spotId);
+        const userId = req.user.id;
+        const spot = await Spot.findByPk(spotId);
+
+        if(!spot) {
+            const noSpot = new Error("Spot couldn't be found");
+            noSpot.status = 404
+            return next(noSpot)
+        }
+
+        if(spot.ownerId !== userId) {
+            const notAuth = new Error("Forbidden")
+            notAuth.status = 403
+            return next(notAuth)
+        }
+        const spotImages = await SpotImage.findAll({
+            where: {spotId}
+        });
+        if(!spotImages) {
+            const noSpotImg = new Error("Spot Does not have images")
+            noSpotImg.status = 404;
+            return next(noSpotImg);
+        }
+        const deletedImages = [];
+        for(let img of spotImages) {
+            deletedImages.push(img.toJSON());
+            await img.destroy();
+        }
+
+        res.status(200).json(deletedImages)
+
+    } catch (error) {
+        next(error)
+    }
+})
 
 router.delete('/:spotId', requireAuth, async (req, res, next) => {
     try {
@@ -612,9 +648,7 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
         
         await spot.destroy();
 
-        return res.json({
-            message: "Successfully deleted"
-          })
+        return res.json(spot)
 
     } catch (error) {
         next(error)
