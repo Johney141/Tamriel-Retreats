@@ -22,10 +22,11 @@ const SpotReviews = ({reviews, user, reviewDeleted}) => {
                     <h4>{review.User.firstName}</h4>
                     <h5>{getDate(review.createdAt)}</h5>
                     <p>{review.review}</p>
-                    {review.userId === user.id ? 
+                    {user && review.userId === user.id ? 
                         <OpenModalButton 
                             buttonText={'Delete'}
                             modalComponent={<DeleteReviewModal reviewId={review.id} reviewDeleted={reviewDeleted}/>}
+                            className='delete-review-button'
                         />
                     : null}
                 </div>

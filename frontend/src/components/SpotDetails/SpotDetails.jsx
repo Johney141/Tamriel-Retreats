@@ -107,10 +107,11 @@ const SpotDetails = () => {
                             <div>
                                 <OpenModalButton 
                                     buttonText={'Post Your Review'}
-                                    modalComponent={<CreateReviewModal spotId={spot.id} user={user} reviewCreated={handleReview}/>}
-                                />
+                                    modalComponent={<CreateReviewModal spotId={spot.id} user={user} reviewCreated={handleReview} />}
+                                    className='review-modal'
+                                />  
+                                <p>Be the first to post a review!</p>
                             </div> : null}
-                            <p>Be the first to post a review!</p>
                         </div >
                     : 
                         <div>
@@ -123,6 +124,7 @@ const SpotDetails = () => {
                                 <OpenModalButton 
                                     buttonText={'Post Your Review'}
                                     modalComponent={<CreateReviewModal spotId={spot.id} user={user} reviewCreated={handleReview}/>}
+                                    className='review-modal'
                                 />
                             </div> : null}
                         </div>}
