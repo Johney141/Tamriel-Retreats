@@ -5,6 +5,7 @@ import { CiStar } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
 import DeleteSpotModal from "../DeleteSpotModal/DeleteSpotModal";
+import './UserSpots.css'
 
 const UserSpots = () => {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -44,6 +45,7 @@ const UserSpots = () => {
             <h1>Manage Your Spots</h1>
             <button
             onClick={() => navigate('/spots/create-a-spot')}
+            className="create-spot-button"
             >Create a New Spot</button>
         </div>
         <div className="landing-container">
@@ -62,16 +64,21 @@ const UserSpots = () => {
                         <p>{spot.city}, {spot.state}</p>
                         <div className="star-rating">
                             <CiStar />
-                            <p>{spot.avgRating}</p>
+                            {spot.avgRating ? <p>{spot.avgRating}</p> : <p>New</p>}
                         </div>
                     </div>
                     <p className="pricing"><b>${spot.price}</b>/night</p>
                     </div>
                     <div>
-                        <button onClick={() => navigate(`/spots/${spot.id}/edit`)}>Update</button>
+                        <button 
+                            onClick={() => navigate(`/spots/${spot.id}/edit`)}
+                            className="manage-buttons"
+                        >Update</button>
                         <OpenModalButton                 
                             buttonText="Delete"
-                            modalComponent={<DeleteSpotModal spotId={spot.id} spotDeleted={handleSpotDeleted}/>}/>
+                            modalComponent={<DeleteSpotModal spotId={spot.id} spotDeleted={handleSpotDeleted}/>}
+                            className='manage-buttons'
+                            />
                     </div>
             </div>
             ))}

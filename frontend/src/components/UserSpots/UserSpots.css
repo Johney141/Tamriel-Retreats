@@ -1,0 +1,25 @@
+.user-spots-container {
+    margin: 1rem;
+}
+
+
+.manage-buttons {
+    margin: .25rem;
+    border: .5px solid grey;
+    border-radius: 10px;
+    background-color: #FF385C;
+    color: white;
+}
+
+.create-spot-button {
+    border: .5px solid grey;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    background-color: #FF385C;
+    color: white;
+}
+
+.manage-buttons:hover,
+.create-spot-button:hover {
+    background-color: darkgrey;
+}
